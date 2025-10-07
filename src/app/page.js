@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import WelcomeScreen from "@/components/WelcomeScreen";
 import UserDetailsForm from "@/components/UserDetailsForm";
-import SurveyWizard from "@/components/SurveyWizard";
-import RecommendationsPage from "@/components/RecommendationsPage";
+import ConversationalWizard from "@/components/ConversationalWizard";
+import AIRecommendationsPage from "@/components/AIRecommendationsPage";
 import "./globals.css";
 
 export default function Home() {
@@ -97,7 +97,7 @@ export default function Home() {
             variants={pageVariants}
             transition={pageTransition}
           >
-            <SurveyWizard
+            <ConversationalWizard
               userName={surveyData.name}
               onComplete={handleSurveyComplete}
               onBack={handleBack}
@@ -114,7 +114,7 @@ export default function Home() {
             variants={pageVariants}
             transition={pageTransition}
           >
-            <RecommendationsPage
+            <AIRecommendationsPage
               surveyData={surveyData}
               onRestart={handleRestart}
             />
