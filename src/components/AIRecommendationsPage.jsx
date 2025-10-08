@@ -1,34 +1,72 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingBag, RotateCcw } from "lucide-react";
 
-const MOCK_PRODUCTS = [
-  {
-    id: "1",
-    name: "Classic Diamond Solitaire Ring",
-    price: "$2,495",
-    image: "/product-ring.jpg",
-    description: "Timeless elegance with a brilliant cut diamond",
-  },
-  {
-    id: "2",
-    name: "Elegant Gold Chain Necklace",
-    price: "$1,295",
-    image: "/product-necklace.jpg",
-    description: "Sophisticated 18k gold chain with delicate pendant",
-  },
-  {
-    id: "3",
-    name: "Pearl Drop Earrings",
-    price: "$895",
-    image: "/product-earrings.jpg",
-    description: "Lustrous pearls set in premium gold settings",
-  },
-];
+const AIRecommendationsPage = ({ surveyData, onRestart }) => {
+  const [products, setProducts] = useState([]);
 
-const RecommendationsPage = ({ surveyData, onRestart }) => {
+  // Initialize products from surveyData
+  useEffect(() => {
+    if (surveyData && surveyData.products) {
+      setProducts(surveyData.products);
+    } else {
+      // Fallback to mock products if no products are provided
+      setProducts([
+        {
+          id: "1",
+          name: "Classic Diamond Solitaire Ring",
+          price: "$2,495",
+          image: "/product-ring.jpg",
+          description: "Timeless elegance with a brilliant cut diamond",
+        },
+        {
+          id: "2",
+          name: "Elegant Gold Chain Necklace",
+          price: "$1,295",
+          image: "/product-necklace.jpg",
+          description: "Sophisticated 18k gold chain with delicate pendant",
+        },
+        {
+          id: "3",
+          name: "Pearl Drop Earrings",
+          price: "$895",
+          image: "/product-earrings.jpg",
+          description: "Lustrous pearls set in premium gold settings",
+        },
+      ]);
+    }
+  }, [surveyData]);
+
+  // Extract tags from survey data
+  const tags = surveyData?.tags || [];
+
+  // Format tags for display
+  const formatTag = (tag) => {
+    switch (tag) {
+      case "ring":
+      case "necklace":
+      case "bracelet":
+      case "earrings":
+      case "watch":
+        return tag.charAt(0).toUpperCase() + tag.slice(1);
+      case "budget":
+        return "Under $500";
+      case "mid-range":
+        return "$500 - $2,000";
+      case "premium":
+        return "$2,000 - $5,000";
+      case "luxury":
+        return "Over $5,000";
+      default:
+        return tag.charAt(0).toUpperCase() + tag.slice(1);
+    }
+  };
+
   return (
     <div className="min-h-screen hero-gradient px-4 py-8">
       <div className="max-w-6xl mx-auto">
@@ -45,15 +83,19 @@ const RecommendationsPage = ({ surveyData, onRestart }) => {
             </span>
           </h1>
           <p className="text-xl text-muted-foreground mb-6">
-            Based on your preferences for {surveyData.jewelryType} •{" "}
-            {surveyData.occasion} • {surveyData.stylePreference}
+            Evol-e recommends you these products
           </p>
-          <Badge variant="secondary" className="text-sm px-4 py-2">
-            {surveyData.priceRange
-              .replace("-", " - $")
-              .replace("under", "Under $")
-              .replace("over", "Over $")}
-          </Badge>
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {tags.map((tag, index) => (
+              <Badge
+                key={index}
+                variant="secondary"
+                className="text-sm px-4 py-2"
+              >
+                {formatTag(tag)}
+              </Badge>
+            ))}
+          </div>
         </motion.div>
 
         {/* Products Grid */}
@@ -63,7 +105,7 @@ const RecommendationsPage = ({ surveyData, onRestart }) => {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
         >
-          {MOCK_PRODUCTS.map((product, index) => (
+          {products.map((product, index) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 30 }}
@@ -124,7 +166,7 @@ const RecommendationsPage = ({ surveyData, onRestart }) => {
             className="kiosk-button border-2 px-8"
           >
             <RotateCcw className="w-5 h-5 mr-2" />
-            Retake Survey
+            Speak to Evol-e again
           </Button>
         </motion.div>
       </div>
@@ -132,4 +174,4 @@ const RecommendationsPage = ({ surveyData, onRestart }) => {
   );
 };
 
-export default RecommendationsPage;
+export { AIRecommendationsPage };

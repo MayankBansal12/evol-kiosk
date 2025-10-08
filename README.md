@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI-Driven Jewellery Kiosk
+
+This is a Next.js-based conversational AI jewellery kiosk that uses Gemini 2.5 Flash lite model to create an intelligent assistant experience.
 
 ## Getting Started
 
-First, run the development server:
+### Set up API key
+
+First, set up your `.env` from the `.env.example` file:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# .env.local
+GEMINI_API_KEY="your_api_key_here"
+USE_MOCK_DATA="false" # Set to "true" to use mock data instead of AI
+```
+
+If you don't have an API key, you can set `USE_MOCK_DATA="true"` to use simulated responses.
+
+### Start the development server
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Conversational AI Interface**: Natural dialogue flow using Gemini 2.5 Flash model
+- **Dynamic Question Generation**: Questions adapt based on previous answers
+- **Personalized Product Recommendations**: Curated based on conversation context
+- **Elegant Animations**: Smooth transitions using Framer Motion
+- **Kiosk-Optimized UI**: Large touch targets and fullscreen layout
+- **AI Integration**: Server actions for Gemini API integration
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+- `/src/app/actions/aiResponse.js` - Server action for Gemini API integration
+- `/src/app/actions/prompts.js` - AI prompt for the jewellery stylist
+- `/src/components/ConversationalWizard.jsx` - Main conversational interface
+- `/src/components/AIRecommendationsPage.jsx` - Displays AI-recommended products
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## AI Integration Details
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### How the AI Works
 
-## Deploy on Vercel
+1. **Conversation Initialization**: When the kiosk starts, it sends an initial request to the Gemini API.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Context Tracking**: Each user response is added to the conversation context, allowing the AI to remember previous choices.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Dynamic Response Generation**: The AI analyzes the context to decide whether to ask another question or provide product recommendations.
+
+4. **Personalization**: The AI incorporates the user's name and preferences into its responses.
