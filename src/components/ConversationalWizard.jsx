@@ -20,14 +20,7 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
     const initializeConversation = async () => {
       setIsLoading(true);
       try {
-        const initialMessages = [
-          {
-            role: "system",
-            content:
-              "You are a friendly jewellery stylist helping the user find the perfect piece.",
-            metadata: { name: userName },
-          },
-        ];
+        const initialMessages = [];
 
         // Get AI response for the first question
         const response = await getAIResponse(initialMessages, userName);
@@ -61,12 +54,13 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
     setIsLoading(true);
     const userMessage = {
       role: "user",
-      content: option.label,
+      content: option,
     };
 
     try {
       const updatedMessages = [...messages, userMessage];
       setMessages(updatedMessages);
+      setCurrentQuestion(null);
 
       const response = await getAIResponse(updatedMessages);
       if (response.success) {
@@ -165,7 +159,7 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
                   {currentQuestion.options &&
                     currentQuestion.options.map((option, index) => (
                       <motion.div
-                        key={option.value}
+                        key={index}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
@@ -176,7 +170,7 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
                         >
                           <div className="text-center p-4">
                             <h3 className="text-lg font-medium text-charcoal">
-                              {option.label}
+                              {option}
                             </h3>
                           </div>
                         </Card>
@@ -214,4 +208,4 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
   );
 };
 
-export default ConversationalWizard;
+export { ConversationalWizard };

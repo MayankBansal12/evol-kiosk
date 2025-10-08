@@ -48,8 +48,8 @@ const WelcomeScreen = ({ onStart }) => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed"
         >
-          Take our personalized survey to find jewellery pieces that perfectly
-          match your style, occasion, and preferences.
+          Evol-e is here to help you find jewellery pieces that perfectly match
+          your style, occasion, and preferences.
         </motion.p>
 
         <motion.div
@@ -62,7 +62,7 @@ const WelcomeScreen = ({ onStart }) => {
             size="lg"
             className="kiosk-button px-12 py-6 text-xl gold-gradient text-charcoal font-medium luxury-shadow hover:shadow-[var(--shadow-glow)] border-0"
           >
-            Start Your Journey
+            Talk to Evol-e
           </Button>
         </motion.div>
 
@@ -79,4 +79,4 @@ const WelcomeScreen = ({ onStart }) => {
   );
 };
 
-export default WelcomeScreen;
+export { WelcomeScreen };

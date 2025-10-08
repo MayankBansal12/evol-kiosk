@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import WelcomeScreen from "@/components/WelcomeScreen";
-import UserDetailsForm from "@/components/UserDetailsForm";
-import ConversationalWizard from "@/components/ConversationalWizard";
-import AIRecommendationsPage from "@/components/AIRecommendationsPage";
+import { WelcomeScreen } from "@/components/WelcomeScreen";
+import { UserDetailsForm } from "@/components/UserDetailsForm";
+import { ConversationalWizard } from "@/components/ConversationalWizard";
+import { AIRecommendationsPage } from "@/components/AIRecommendationsPage";
 import "./globals.css";
 
 export default function Home() {

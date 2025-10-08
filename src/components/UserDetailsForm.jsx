@@ -38,7 +38,7 @@ const UserDetailsForm = ({ onNext, onBack }) => {
             </motion.div>
 
             <h2 className="text-3xl font-light text-charcoal mb-2">
-              Welcome to Our Boutique
+              Welcome to Evol Jewels
             </h2>
             <p className="text-muted-foreground">
               Let's personalize your experience
@@ -55,7 +55,7 @@ const UserDetailsForm = ({ onNext, onBack }) => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your first name"
+                placeholder="your name please..."
                 className="h-14 text-lg border-2 border-border/50 focus:border-gold"
                 required
               />
@@ -85,4 +85,4 @@ const UserDetailsForm = ({ onNext, onBack }) => {
   );
 };
 
-export default UserDetailsForm;
+export { UserDetailsForm };

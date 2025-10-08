@@ -22,22 +22,22 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
           name: "Classic Diamond Solitaire Ring",
           price: "$2,495",
           image: "/product-ring.jpg",
-          description: "Timeless elegance with a brilliant cut diamond"
+          description: "Timeless elegance with a brilliant cut diamond",
         },
         {
           id: "2",
           name: "Elegant Gold Chain Necklace",
           price: "$1,295",
           image: "/product-necklace.jpg",
-          description: "Sophisticated 18k gold chain with delicate pendant"
+          description: "Sophisticated 18k gold chain with delicate pendant",
         },
         {
           id: "3",
           name: "Pearl Drop Earrings",
           price: "$895",
           image: "/product-earrings.jpg",
-          description: "Lustrous pearls set in premium gold settings"
-        }
+          description: "Lustrous pearls set in premium gold settings",
+        },
       ]);
     }
   }, [surveyData]);
@@ -83,11 +83,15 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
             </span>
           </h1>
           <p className="text-xl text-muted-foreground mb-6">
-            Based on your conversation with our stylist
+            Evol-e recommends you these products
           </p>
           <div className="flex flex-wrap justify-center gap-2 mb-8">
             {tags.map((tag, index) => (
-              <Badge key={index} variant="secondary" className="text-sm px-4 py-2">
+              <Badge
+                key={index}
+                variant="secondary"
+                className="text-sm px-4 py-2"
+              >
                 {formatTag(tag)}
               </Badge>
             ))}
@@ -162,7 +166,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
             className="kiosk-button border-2 px-8"
           >
             <RotateCcw className="w-5 h-5 mr-2" />
-            Speak to our stylist again
+            Speak to Evol-e again
           </Button>
         </motion.div>
       </div>
@@ -170,4 +174,4 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
   );
 };
 
-export default AIRecommendationsPage;
+export { AIRecommendationsPage };
