@@ -105,26 +105,6 @@ const ProductDetailsPage = ({ product }) => {
                 )}
               </div>
             </Card>
-
-            {/* Image Actions */}
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-1 border-2 border-gold/30 bg-white"
-              >
-                <Heart className="w-4 h-4 mr-2" />
-                Save
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-1 border-2 border-gold/30 bg-white"
-              >
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
-            </div>
           </motion.div>
 
           {/* Product Information */}
@@ -132,7 +112,7 @@ const ProductDetailsPage = ({ product }) => {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-8 min-h-[80vh] flex flex-col justify-between"
+            className="space-y-12 min-h-[80vh] flex flex-col"
           >
             {/* Product Header */}
             <div>
@@ -208,6 +188,24 @@ const ProductDetailsPage = ({ product }) => {
                   Consult
                 </Button>
               </ConsultationChat>
+            </div>
+
+            {/* Save/Share Actions - MOVED FROM LEFT SECTION */}
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1 h-12 border-2 border-gold/30 bg-white text-sm font-medium"
+              >
+                <Heart className="w-4 h-4 mr-2" />
+                Save
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1 h-12 border-2 border-gold/30 bg-white text-sm font-medium"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
             </div>
           </motion.div>
         </div>
