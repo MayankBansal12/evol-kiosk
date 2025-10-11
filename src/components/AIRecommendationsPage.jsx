@@ -11,6 +11,7 @@ import {
   RotateCcw,
   ChevronLeft,
   ChevronRight,
+  Home,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
@@ -117,6 +118,32 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
   return (
     <div className="min-h-screen hero-gradient px-4 py-8">
       <div className="max-w-6xl mx-auto">
+        {/* Top Navigation */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-start mb-8"
+        >
+          <Button
+            onClick={() => {
+              // Clear ALL localStorage and session data
+              localStorage.removeItem("surveyData");
+              // Also clear session if sessionManager is available
+              try {
+                const { clearCurrentSession } = require("@/lib/sessionManager");
+                clearCurrentSession();
+              } catch (error) {
+                console.error("Error clearing session:", error);
+              }
+              window.location.href = "/";
+            }}
+            className="gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] px-6 py-3 rounded-full font-medium text-base"
+          >
+            <Home className="w-5 h-5 mr-2" />
+            Home
+          </Button>
+        </motion.div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -293,10 +320,10 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
               localStorage.removeItem("surveyData");
               // Also clear session if sessionManager is available
               try {
-                const { clearCurrentSession } = require('@/lib/sessionManager');
+                const { clearCurrentSession } = require("@/lib/sessionManager");
                 clearCurrentSession();
               } catch (error) {
-                console.error('Error clearing session:', error);
+                console.error("Error clearing session:", error);
               }
               window.location.href = "/";
             }}
