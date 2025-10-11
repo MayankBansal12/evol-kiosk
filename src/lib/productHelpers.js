@@ -12,18 +12,76 @@ export function findProductById(id) {
 }
 
 /**
+ * Filter products based on AI response tags and metadata
+ * @param {string[]} aiTags - Tags from AI response
+ * @param {object} aiMetadata - Metadata from AI response
+ * @returns {object[]} Array of filtered products with match scores
+ */
+export function filterProductsByAIResponse(
+  category = null,
+  aiTags = [],
+  aiMetadata = {}
+) {
+  // Step 1: Filter by category FIRST (highest priority)
+  let categoryFiltered = productData;
+  if (category) {
+    categoryFiltered = productData.filter(
+      (product) => product.category.toLowerCase() === category.toLowerCase()
+    );
+
+    // If no products match the category, log warning but continue
+    if (categoryFiltered.length === 0) {
+      console.warn(`No products found for category: ${category}`);
+      categoryFiltered = productData; // Fallback to all products
+    }
+  }
+
+  // Step 2: Apply tag/metadata matching on category-filtered results
+  if (!aiTags.length && !Object.keys(aiMetadata).length) {
+    return categoryFiltered.map((product) => ({
+      ...product,
+      matchScore: 0,
+      matchPercentage: 0,
+    }));
+  }
+
+  const filteredProducts = categoryFiltered.map((product) => {
+    const matchResult = calculateMatch(
+      aiTags,
+      product.tags,
+      product.metadata,
+      aiMetadata
+    );
+    return {
+      ...product,
+      matchScore: matchResult.score,
+      matchPercentage: matchResult.matchPercentage,
+      matchedTags: matchResult.matches,
+      additionalFeatures: matchResult.additionalFeatures,
+    };
+  });
+
+  // Step 3: Sort by match score (descending) and filter out products with 0% match
+  return filteredProducts
+    .filter((product) => product.matchPercentage > 0)
+    .sort((a, b) => b.matchScore - a.matchScore);
+}
+
+/**
  * Calculate match score between user requirements and product attributes
  * @param {string[]} userTags - User's preferred tags
  * @param {string[]} productTags - Product tags
  * @param {object} productMetadata - Product metadata object
+ * @param {object} userMetadata - User's preferred metadata
  * @returns {object} Match analysis with score and details
  */
 export function calculateMatch(
   userTags = [],
   productTags = [],
-  productMetadata = {}
+  productMetadata = {},
+  userMetadata = {}
 ) {
-  if (!userTags.length) {
+  if (!userTags.length && !Object.keys(userMetadata).length) {
     return {
       score: 0,
       matches: [],
@@ -32,8 +90,8 @@ export function calculateMatch(
     };
   }
 
-  // Find direct tag matches
-  const directMatches = userTags.filter((tag) =>
+  // Calculate tag matches
+  const tagMatches = userTags.filter((tag) =>
     productTags.some(
       (productTag) =>
         productTag.toLowerCase().includes(tag.toLowerCase()) ||
@@ -41,35 +99,88 @@ export function calculateMatch(
     )
   );
 
-  // Find metadata matches
+  // Calculate metadata matches
   const metadataMatches = [];
-  const metadataKeys = Object.keys(productMetadata);
+  const userMetadataKeys = Object.keys(userMetadata);
 
-  userTags.forEach((userTag) => {
-    metadataKeys.forEach((key) => {
-      const value = productMetadata[key];
-      if (Array.isArray(value)) {
-        if (
-          value.some((v) => v.toLowerCase().includes(userTag.toLowerCase()))
-        ) {
-          metadataMatches.push(`${key}: ${value.join(", ")}`);
-        }
-      } else if (
-        typeof value === "string" &&
-        value.toLowerCase().includes(userTag.toLowerCase())
-      ) {
-        metadataMatches.push(`${key}: ${value}`);
+  userMetadataKeys.forEach((key) => {
+    const userValues = userMetadata[key];
+    const productValue = productMetadata[key];
+
+    // Helper function to safely convert to string and lowercase
+    const safeStringify = (val) => {
+      if (typeof val === "string") return val.toLowerCase();
+      if (typeof val === "number") return val.toString();
+      if (Array.isArray(val))
+        return val.map((v) =>
+          typeof v === "string" ? v.toLowerCase() : v.toString()
+        );
+      return val ? val.toString().toLowerCase() : "";
+    };
+
+    if (Array.isArray(userValues) && Array.isArray(productValue)) {
+      // Both are arrays - check for overlap
+      const userStrings = userValues.map((v) => safeStringify(v));
+      const productStrings = productValue.map((v) => safeStringify(v));
+
+      const overlap = userStrings.filter((userVal) =>
+        productStrings.some(
+          (prodVal) => prodVal.includes(userVal) || userVal.includes(prodVal)
+        )
+      );
+      if (overlap.length > 0) {
+        metadataMatches.push(`${key}: ${overlap.join(", ")}`);
       }
-    });
+    } else if (Array.isArray(userValues) && !Array.isArray(productValue)) {
+      // User has array, product has single value
+      const userStrings = userValues.map((v) => safeStringify(v));
+      const productString = safeStringify(productValue);
+
+      if (
+        userStrings.some(
+          (userVal) =>
+            productString.includes(userVal) || userVal.includes(productString)
+        )
+      ) {
+        metadataMatches.push(`${key}: ${productValue}`);
+      }
+    } else if (!Array.isArray(userValues) && Array.isArray(productValue)) {
+      // User has single value, product has array
+      const userString = safeStringify(userValues);
+      const productStrings = productValue.map((v) => safeStringify(v));
+
+      if (
+        productStrings.some(
+          (prodVal) =>
+            prodVal.includes(userString) || userString.includes(prodVal)
+        )
+      ) {
+        metadataMatches.push(`${key}: ${userValues}`);
+      }
+    } else {
+      // Both are single values
+      const userString = safeStringify(userValues);
+      const productString = safeStringify(productValue);
+
+      if (
+        productString.includes(userString) ||
+        userString.includes(productString)
+      ) {
+        metadataMatches.push(`${key}: ${productValue}`);
+      }
+    }
   });
 
-  const allMatches = [...directMatches, ...metadataMatches];
-  const uniqueMatches = [...new Set(allMatches)];
+  // Calculate scores with equal weighting (50% tags, 50% metadata)
+  const tagScore =
+    userTags.length > 0 ? (tagMatches.length / userTags.length) * 50 : 0;
+  const metadataScore =
+    userMetadataKeys.length > 0
+      ? (metadataMatches.length / userMetadataKeys.length) * 50
+      : 0;
 
-  // Calculate score based on matches vs total user requirements
-  const matchPercentage = Math.round(
-    (uniqueMatches.length / userTags.length) * 100
-  );
+  const totalScore = tagScore + metadataScore;
+  const matchPercentage = Math.round(totalScore);
 
   // Additional features not requested by user
   const additionalFeatures = productTags.filter(
@@ -82,8 +193,8 @@ export function calculateMatch(
   );
 
   return {
-    score: uniqueMatches.length,
-    matches: uniqueMatches,
+    score: Math.round(totalScore),
+    matches: [...tagMatches, ...metadataMatches],
     additionalFeatures,
     matchPercentage: Math.min(matchPercentage, 100),
   };

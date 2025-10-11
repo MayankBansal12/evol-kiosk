@@ -16,14 +16,27 @@ export function generateMockResponse(messages, userName) {
  */
 function shouldGenerateProducts(messages) {
   const userMsgCount = messages.filter((msg) => msg.role === "user").length;
-  if (userMsgCount >= 5) return true;
   const lastUserMsg =
     messages.filter((msg) => msg.role === "user").pop()?.content || "";
-  return (
-    lastUserMsg.toLowerCase().includes("recommend") ||
-    lastUserMsg.toLowerCase().includes("show me") ||
-    lastUserMsg.toLowerCase().includes("suggestions")
+
+  // Check for explicit requests to see products
+  const explicitRequests = [
+    "show me options",
+    "show me products",
+    "show me jewelry",
+    "show me pieces",
+    "recommend",
+    "suggestions",
+    "yes, show me options",
+    "yes show me options",
+  ];
+
+  const hasExplicitRequest = explicitRequests.some((request) =>
+    lastUserMsg.toLowerCase().includes(request.toLowerCase())
   );
+
+  // Show products if user explicitly requests OR if we have enough context (3+ messages)
+  return hasExplicitRequest || userMsgCount >= 3;
 }
 
 /**
@@ -38,32 +51,26 @@ function generateNextQuestion(messages, userName) {
   const hasAskedAboutType = assistantMessages.some(
     (msg) =>
       msg.content.toLowerCase().includes("type") ||
-      msg.content.toLowerCase().includes("piece"),
+      msg.content.toLowerCase().includes("piece")
   );
 
   const hasAskedAboutOccasion = assistantMessages.some(
     (msg) =>
       msg.content.toLowerCase().includes("occasion") ||
-      msg.content.toLowerCase().includes("event"),
-  );
-
-  const hasAskedAboutRecipient = assistantMessages.some(
-    (msg) =>
-      msg.content.toLowerCase().includes("who") ||
-      msg.content.toLowerCase().includes("recipient"),
+      msg.content.toLowerCase().includes("event")
   );
 
   const hasAskedAboutBudget = assistantMessages.some(
     (msg) =>
       msg.content.toLowerCase().includes("budget") ||
       msg.content.toLowerCase().includes("price") ||
-      msg.content.toLowerCase().includes("spend"),
+      msg.content.toLowerCase().includes("spend")
   );
 
   const hasAskedAboutStyle = assistantMessages.some(
     (msg) =>
       msg.content.toLowerCase().includes("style") ||
-      msg.content.toLowerCase().includes("design"),
+      msg.content.toLowerCase().includes("design")
   );
 
   // First message - introduction
@@ -116,9 +123,9 @@ function generateNextQuestion(messages, userName) {
   }
 
   return {
-    content: `Thank you for sharing your preferences${personalizedGreeting}! I think I have enough to suggest some beautiful pieces for you. Would you like to see my recommendations?`,
+    content: `Perfect${personalizedGreeting}! I have a wonderful selection of pieces that match your style. Would you like to see my recommendations?`,
     type: "question",
-    options: ["show-recommendations", "more-questions"],
+    options: ["Yes, show me options", "Tell me more about the pieces"],
   };
 }
 
@@ -126,7 +133,6 @@ function generateNextQuestion(messages, userName) {
  * Generate product recommendations based on conversation context
  */
 function generateProductRecommendations(messages, userName) {
-  const userMessages = messages.filter((msg) => msg.role === "user");
   const personalizedGreeting = userName ? `, ${userName}` : "";
 
   // Analyze conversation to determine preferences
@@ -134,13 +140,95 @@ function generateProductRecommendations(messages, userName) {
   const style = determinePreference(messages, "style", "classic");
   const priceRange = determinePreference(messages, "budget", "mid-range");
 
+  // Generate tags and metadata based on preferences
+  const tags = generateTagsFromPreferences(jewelryType, style, priceRange);
+  const metadata = generateMetadataFromPreferences(
+    jewelryType,
+    style,
+    priceRange
+  );
+
   const products = getMockProducts(jewelryType, style, priceRange);
   return {
     content: `I think you'll love these pieces${personalizedGreeting}. They perfectly match your style preferences.`,
     type: "products",
     products: products,
-    tags: [jewelryType, style, priceRange],
+    tags: tags,
+    metadata: metadata,
   };
+}
+
+/**
+ * Generate tags based on user preferences
+ */
+function generateTagsFromPreferences(jewelryType, style, priceRange) {
+  const tags = [];
+
+  // Add style-based tags
+  if (style === "classic") tags.push("classic", "elegant", "timeless");
+  if (style === "modern") tags.push("modern", "contemporary", "geometric");
+  if (style === "vintage") tags.push("vintage", "romantic", "artistic");
+  if (style === "minimal") tags.push("minimalist", "delicate", "everyday");
+  if (style === "statement") tags.push("statement", "bold", "dramatic");
+
+  // Add price range tags
+  if (priceRange === "budget") tags.push("mid-range");
+  if (priceRange === "luxury") tags.push("luxury", "ultra-luxury");
+
+  // Add jewelry type specific tags
+  if (jewelryType === "ring") tags.push("romantic", "special-occasion");
+  if (jewelryType === "necklace") tags.push("elegant", "feminine");
+  if (jewelryType === "earrings") tags.push("delicate", "artistic");
+
+  return tags;
+}
+
+/**
+ * Generate metadata based on user preferences
+ */
+function generateMetadataFromPreferences(jewelryType, style, priceRange) {
+  const metadata = {};
+
+  // Formality level based on style and occasion
+  if (style === "classic" || style === "statement") {
+    metadata.formality_level = [7, 8, 9];
+  } else if (style === "modern") {
+    metadata.formality_level = [5, 6, 7];
+  } else {
+    metadata.formality_level = [3, 4, 5];
+  }
+
+  // Style intensity based on preference
+  if (style === "statement") {
+    metadata.style_intensity = [8, 9, 10];
+  } else if (style === "modern") {
+    metadata.style_intensity = [6, 7, 8];
+  } else {
+    metadata.style_intensity = [3, 4, 5];
+  }
+
+  // Age group (infer from style preferences)
+  metadata.age_group = ["adult", "mature"];
+
+  // Outfit style based on formality
+  if (metadata.formality_level[0] >= 7) {
+    metadata.outfit_style = ["formal", "special-occasion", "evening"];
+  } else if (metadata.formality_level[0] >= 5) {
+    metadata.outfit_style = ["business", "evening", "special-occasion"];
+  } else {
+    metadata.outfit_style = ["casual", "everyday", "work"];
+  }
+
+  // Materials based on price range
+  if (priceRange === "luxury") {
+    metadata.materials = ["diamond", "gold"];
+    metadata.investment_value = ["high", "very-high"];
+  } else {
+    metadata.materials = ["diamond", "gold"];
+    metadata.investment_value = ["medium", "high"];
+  }
+
+  return metadata;
 }
 
 /**
@@ -149,104 +237,90 @@ function generateProductRecommendations(messages, userName) {
 function determinePreference(messages, preferenceType, defaultValue) {
   const userMessages = messages.filter((msg) => msg.role === "user");
 
-  // Type preferences
   if (preferenceType === "type") {
-    if (userMessages.some((msg) => msg.content.toLowerCase().includes("ring")))
-      return "ring";
-    if (
-      userMessages.some((msg) => msg.content.toLowerCase().includes("necklace"))
-    )
-      return "necklace";
-    if (
-      userMessages.some((msg) => msg.content.toLowerCase().includes("bracelet"))
-    )
-      return "bracelet";
-    if (
-      userMessages.some((msg) => msg.content.toLowerCase().includes("earring"))
-    )
-      return "earrings";
-    if (userMessages.some((msg) => msg.content.toLowerCase().includes("watch")))
-      return "watch";
+    return determineJewelryType(userMessages, defaultValue);
   }
 
-  // Style preferences
   if (preferenceType === "style") {
-    if (
-      userMessages.some(
-        (msg) =>
-          msg.content.toLowerCase().includes("classic") ||
-          msg.content.toLowerCase().includes("timeless"),
-      )
-    )
-      return "classic";
-    if (
-      userMessages.some(
-        (msg) =>
-          msg.content.toLowerCase().includes("modern") ||
-          msg.content.toLowerCase().includes("contemporary"),
-      )
-    )
-      return "modern";
-    if (
-      userMessages.some(
-        (msg) =>
-          msg.content.toLowerCase().includes("vintage") ||
-          msg.content.toLowerCase().includes("antique"),
-      )
-    )
-      return "vintage";
-    if (
-      userMessages.some(
-        (msg) =>
-          msg.content.toLowerCase().includes("minimal") ||
-          msg.content.toLowerCase().includes("simple"),
-      )
-    )
-      return "minimal";
-    if (
-      userMessages.some(
-        (msg) =>
-          msg.content.toLowerCase().includes("statement") ||
-          msg.content.toLowerCase().includes("bold"),
-      )
-    )
-      return "statement";
+    return determineStyle(userMessages, defaultValue);
   }
 
-  // Budget preferences
   if (preferenceType === "budget") {
+    return determineBudget(userMessages, defaultValue);
+  }
+
+  return defaultValue;
+}
+
+/**
+ * Determine jewelry type preference
+ */
+function determineJewelryType(userMessages, defaultValue) {
+  const typeKeywords = {
+    ring: ["ring"],
+    necklace: ["necklace"],
+    bracelet: ["bracelet"],
+    earrings: ["earring"],
+    watch: ["watch"],
+  };
+
+  for (const [type, keywords] of Object.entries(typeKeywords)) {
     if (
-      userMessages.some(
-        (msg) =>
-          msg.content.toLowerCase().includes("under $500") ||
-          msg.content.toLowerCase().includes("budget"),
+      userMessages.some((msg) =>
+        keywords.some((keyword) => msg.content.toLowerCase().includes(keyword))
       )
-    )
-      return "budget";
+    ) {
+      return type;
+    }
+  }
+
+  return defaultValue;
+}
+
+/**
+ * Determine style preference
+ */
+function determineStyle(userMessages, defaultValue) {
+  const styleKeywords = {
+    classic: ["classic", "timeless"],
+    modern: ["modern", "contemporary"],
+    vintage: ["vintage", "antique"],
+    minimal: ["minimal", "simple"],
+    statement: ["statement", "bold"],
+  };
+
+  for (const [style, keywords] of Object.entries(styleKeywords)) {
     if (
-      userMessages.some(
-        (msg) =>
-          msg.content.toLowerCase().includes("$500") ||
-          msg.content.toLowerCase().includes("$2,000"),
+      userMessages.some((msg) =>
+        keywords.some((keyword) => msg.content.toLowerCase().includes(keyword))
       )
-    )
-      return "mid-range";
+    ) {
+      return style;
+    }
+  }
+
+  return defaultValue;
+}
+
+/**
+ * Determine budget preference
+ */
+function determineBudget(userMessages, defaultValue) {
+  const budgetKeywords = {
+    budget: ["under $500", "budget"],
+    "mid-range": ["$500", "$2,000"],
+    premium: ["$2,000", "$5,000"],
+    luxury: ["over $5,000", "luxury"],
+  };
+
+  for (const [budget, keywords] of Object.entries(budgetKeywords)) {
     if (
-      userMessages.some(
-        (msg) =>
-          msg.content.toLowerCase().includes("$2,000") ||
-          msg.content.toLowerCase().includes("$5,000"),
+      userMessages.some((msg) =>
+        keywords.some((keyword) => msg.content.toLowerCase().includes(keyword))
       )
-    )
-      return "premium";
-    if (
-      userMessages.some(
-        (msg) =>
-          msg.content.toLowerCase().includes("over $5,000") ||
-          msg.content.toLowerCase().includes("luxury"),
-      )
-    )
-      return "luxury";
+    ) {
+      return budget;
+    }
   }
 
   return defaultValue;
