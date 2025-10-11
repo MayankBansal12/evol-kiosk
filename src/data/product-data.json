@@ -1,5 +1,6 @@
 [
   {
+    "id": "product-1",
     "category": "Earring",
     "product_name": "Halo Spiral Diamond Earrings",
     "price": 138477.07,
@@ -18,7 +19,10 @@
       "halo-style"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "halo",
       "design_pattern": "spiral",
@@ -26,11 +30,28 @@
       "weight_range": "heavy",
       "style_intensity": 8,
       "formality_level": 9,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "round", "heart"],
-      "outfit_style": ["formal", "business", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "round",
+        "heart"
+      ],
+      "outfit_style": [
+        "formal",
+        "business",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "classic",
@@ -40,6 +61,7 @@
     }
   },
   {
+    "id": "product-2",
     "category": "Earring",
     "product_name": "Petal Lace Diamond Earrings",
     "price": 82747.55,
@@ -58,7 +80,10 @@
       "nature-inspired"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "lace",
       "design_pattern": "floral",
@@ -66,11 +91,29 @@
       "weight_range": "light",
       "style_intensity": 6,
       "formality_level": 7,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "square"],
-      "outfit_style": ["romantic", "feminine", "special-occasion"],
-      "season_appropriate": ["spring", "summer"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "romantic",
+        "feminine",
+        "special-occasion"
+      ],
+      "season_appropriate": [
+        "spring",
+        "summer"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "timeless",
@@ -80,6 +123,7 @@
     }
   },
   {
+    "id": "product-3",
     "category": "Earring",
     "product_name": "Aria Stacked Diamond Earrings",
     "price": 73181.12,
@@ -98,7 +142,10 @@
       "statement"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "stacked",
       "design_pattern": "tribal",
@@ -106,11 +153,28 @@
       "weight_range": "medium",
       "style_intensity": 7,
       "formality_level": 5,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "round", "heart"],
-      "outfit_style": ["bohemian", "artistic", "casual"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "round",
+        "heart"
+      ],
+      "outfit_style": [
+        "bohemian",
+        "artistic",
+        "casual"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "medium",
       "trendiness": "trendy",
@@ -120,6 +184,7 @@
     }
   },
   {
+    "id": "product-4",
     "category": "Earring",
     "product_name": "Eclipse Enamel Diamond Earrings",
     "price": 123940.92,
@@ -138,7 +203,11 @@
       "cosmic"
     ],
     "metadata": {
-      "materials": ["diamond", "gold", "enamel"],
+      "materials": [
+        "diamond",
+        "gold",
+        "enamel"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "enamel-accent",
       "design_pattern": "celestial",
@@ -146,11 +215,28 @@
       "weight_range": "heavy",
       "style_intensity": 9,
       "formality_level": 6,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "square"],
-      "outfit_style": ["modern", "artistic", "evening"],
-      "season_appropriate": ["fall", "winter"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "modern",
+        "artistic",
+        "evening"
+      ],
+      "season_appropriate": [
+        "fall",
+        "winter"
+      ],
       "maintenance_level": "high",
       "investment_value": "high",
       "trendiness": "trendy",
@@ -160,6 +246,7 @@
     }
   },
   {
+    "id": "product-5",
     "category": "Earring",
     "product_name": "Blossom Vine Diamond Earrings",
     "price": 210731.54,
@@ -178,7 +265,10 @@
       "special-occasion"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "vine",
       "design_pattern": "floral",
@@ -186,11 +276,28 @@
       "weight_range": "medium",
       "style_intensity": 8,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart"],
-      "outfit_style": ["romantic", "special-occasion", "evening"],
-      "season_appropriate": ["spring", "summer"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart"
+      ],
+      "outfit_style": [
+        "romantic",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "spring",
+        "summer"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "timeless",
@@ -200,6 +307,7 @@
     }
   },
   {
+    "id": "product-6",
     "category": "Earring",
     "product_name": "Ethereal Petal Drop Earrings",
     "price": 455910.5,
@@ -218,7 +326,10 @@
       "delicate"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "drop",
       "design_pattern": "floral",
@@ -226,11 +337,27 @@
       "weight_range": "heavy",
       "style_intensity": 10,
       "formality_level": 9,
-      "age_group": ["mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart"],
-      "outfit_style": ["special-occasion", "evening", "formal"],
-      "season_appropriate": ["spring", "summer"],
+      "age_group": [
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart"
+      ],
+      "outfit_style": [
+        "special-occasion",
+        "evening",
+        "formal"
+      ],
+      "season_appropriate": [
+        "spring",
+        "summer"
+      ],
       "maintenance_level": "high",
       "investment_value": "very-high",
       "trendiness": "timeless",
@@ -240,6 +367,7 @@
     }
   },
   {
+    "id": "product-7",
     "category": "Earring",
     "product_name": "Cascade Diamond Chandelier Earrings",
     "price": 226185.92,
@@ -258,7 +386,10 @@
       "bold"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "chandelier",
       "design_pattern": "cascade",
@@ -266,11 +397,26 @@
       "weight_range": "very-heavy",
       "style_intensity": 10,
       "formality_level": 9,
-      "age_group": ["mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart"],
-      "outfit_style": ["formal", "evening", "special-occasion"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart"
+      ],
+      "outfit_style": [
+        "formal",
+        "evening",
+        "special-occasion"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "high",
       "investment_value": "very-high",
       "trendiness": "classic",
@@ -280,6 +426,7 @@
     }
   },
   {
+    "id": "product-8",
     "category": "Earring",
     "product_name": "Ethereal Cascade Diamond Earrings",
     "price": 204770.74,
@@ -298,7 +445,10 @@
       "flowing"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "cascade",
       "design_pattern": "flowing",
@@ -306,11 +456,27 @@
       "weight_range": "heavy",
       "style_intensity": 9,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart"],
-      "outfit_style": ["formal", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "high",
       "investment_value": "very-high",
       "trendiness": "timeless",
@@ -320,6 +486,7 @@
     }
   },
   {
+    "id": "product-9",
     "category": "Earring",
     "product_name": "Swirl Drop Diamond Earrings",
     "price": 78252.43,
@@ -338,7 +505,10 @@
       "statement"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "drop",
       "design_pattern": "swirl",
@@ -346,11 +516,27 @@
       "weight_range": "medium",
       "style_intensity": 7,
       "formality_level": 6,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["cool", "neutral"],
-      "face_shape_suitability": ["oval", "round", "heart"],
-      "outfit_style": ["modern", "artistic", "casual"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "round",
+        "heart"
+      ],
+      "outfit_style": [
+        "modern",
+        "artistic",
+        "casual"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "medium",
       "trendiness": "trendy",
@@ -360,6 +546,7 @@
     }
   },
   {
+    "id": "product-10",
     "category": "Earring",
     "product_name": "Radiant Spiral Diamond Earrings",
     "price": 106526.38,
@@ -378,7 +565,10 @@
       "artistic"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "spiral",
       "design_pattern": "geometric",
@@ -386,11 +576,28 @@
       "weight_range": "medium",
       "style_intensity": 8,
       "formality_level": 7,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "square"],
-      "outfit_style": ["modern", "formal", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "modern",
+        "formal",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "classic",
@@ -400,6 +607,7 @@
     }
   },
   {
+    "id": "product-11",
     "category": "Ring",
     "product_name": "Seraphine Leaf Diamond Ring",
     "price": 60366.21,
@@ -418,7 +626,10 @@
       "feminine"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "leaf",
       "design_pattern": "organic",
@@ -426,11 +637,29 @@
       "weight_range": "light",
       "style_intensity": 5,
       "formality_level": 4,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["casual", "romantic", "everyday"],
-      "season_appropriate": ["spring", "summer"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "casual",
+        "romantic",
+        "everyday"
+      ],
+      "season_appropriate": [
+        "spring",
+        "summer"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "timeless",
@@ -440,6 +669,7 @@
     }
   },
   {
+    "id": "product-12",
     "category": "Ring",
     "product_name": "Aurora Crown Diamond Ring",
     "price": 48842.15,
@@ -458,7 +688,10 @@
       "bohemian"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "crown",
       "design_pattern": "tribal",
@@ -466,11 +699,28 @@
       "weight_range": "medium",
       "style_intensity": 7,
       "formality_level": 5,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "round", "heart"],
-      "outfit_style": ["bohemian", "artistic", "casual"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "round",
+        "heart"
+      ],
+      "outfit_style": [
+        "bohemian",
+        "artistic",
+        "casual"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "medium",
       "trendiness": "trendy",
@@ -480,6 +730,7 @@
     }
   },
   {
+    "id": "product-13",
     "category": "Ring",
     "product_name": "Radiant Trinity Diamond Ring",
     "price": 161697.54,
@@ -498,7 +749,10 @@
       "special-occasion"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "three",
       "setting_style": "trinity",
       "design_pattern": "geometric",
@@ -506,11 +760,28 @@
       "weight_range": "medium",
       "style_intensity": 8,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "square"],
-      "outfit_style": ["formal", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "classic",
@@ -520,6 +791,7 @@
     }
   },
   {
+    "id": "product-14",
     "category": "Ring",
     "product_name": "Phenomena Stackable Diamond Ring",
     "price": 62307.63,
@@ -538,7 +810,10 @@
       "casual"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "single",
       "setting_style": "stackable",
       "design_pattern": "minimalist",
@@ -546,11 +821,29 @@
       "weight_range": "light",
       "style_intensity": 3,
       "formality_level": 3,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "round", "heart", "square"],
-      "outfit_style": ["casual", "everyday", "work"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "round",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "casual",
+        "everyday",
+        "work"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "trendy",
@@ -560,6 +853,7 @@
     }
   },
   {
+    "id": "product-15",
     "category": "Ring",
     "product_name": "Lustrous Split Emerald Ring",
     "price": 132950.13,
@@ -578,7 +872,11 @@
       "bold"
     ],
     "metadata": {
-      "materials": ["emerald", "diamond", "gold"],
+      "materials": [
+        "emerald",
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "split",
       "design_pattern": "artistic",
@@ -586,11 +884,28 @@
       "weight_range": "medium",
       "style_intensity": 9,
       "formality_level": 7,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool"],
-      "face_shape_suitability": ["oval", "heart", "square"],
-      "outfit_style": ["special-occasion", "evening", "artistic"],
-      "season_appropriate": ["spring", "summer"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "special-occasion",
+        "evening",
+        "artistic"
+      ],
+      "season_appropriate": [
+        "spring",
+        "summer"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "timeless",
@@ -600,6 +915,7 @@
     }
   },
   {
+    "id": "product-16",
     "category": "Ring",
     "product_name": "Alchemy Diamond Ring",
     "price": 307245.76,
@@ -618,7 +934,10 @@
       "transformative"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "alchemy",
       "design_pattern": "artistic",
@@ -626,11 +945,27 @@
       "weight_range": "heavy",
       "style_intensity": 10,
       "formality_level": 8,
-      "age_group": ["mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "square"],
-      "outfit_style": ["artistic", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "artistic",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "high",
       "investment_value": "very-high",
       "trendiness": "trendy",
@@ -640,6 +975,7 @@
     }
   },
   {
+    "id": "product-17",
     "category": "Ring",
     "product_name": "Eve Diamond Ring",
     "price": 189864.9,
@@ -658,7 +994,10 @@
       "statement"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "single",
       "setting_style": "classic",
       "design_pattern": "elegant",
@@ -666,11 +1005,28 @@
       "weight_range": "medium",
       "style_intensity": 7,
       "formality_level": 9,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["formal", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "very-high",
       "trendiness": "timeless",
@@ -680,6 +1036,7 @@
     }
   },
   {
+    "id": "product-18",
     "category": "Ring",
     "product_name": "Ethereal Pear Diamond Ring",
     "price": 207369.29,
@@ -698,7 +1055,10 @@
       "unique"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "single",
       "setting_style": "pear",
       "design_pattern": "ethereal",
@@ -706,11 +1066,27 @@
       "weight_range": "medium",
       "style_intensity": 8,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart"],
-      "outfit_style": ["special-occasion", "evening", "formal"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart"
+      ],
+      "outfit_style": [
+        "special-occasion",
+        "evening",
+        "formal"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "very-high",
       "trendiness": "timeless",
@@ -720,6 +1096,7 @@
     }
   },
   {
+    "id": "product-19",
     "category": "Ring",
     "product_name": "Halo Glow Diamond Ring",
     "price": 136083.82,
@@ -738,7 +1115,10 @@
       "formal"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "halo",
       "design_pattern": "radiant",
@@ -746,11 +1126,28 @@
       "weight_range": "medium",
       "style_intensity": 8,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["formal", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "classic",
@@ -760,6 +1157,7 @@
     }
   },
   {
+    "id": "product-20",
     "category": "Ring",
     "product_name": "Infinity Round Diamond Ring",
     "price": 112273.24,
@@ -778,7 +1176,10 @@
       "meaningful"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "infinity",
       "design_pattern": "symbolic",
@@ -786,11 +1187,28 @@
       "weight_range": "medium",
       "style_intensity": 7,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["formal", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "timeless",
@@ -800,6 +1218,7 @@
     }
   },
   {
+    "id": "product-21",
     "category": "Ring",
     "product_name": "Sculpted Pear Signet Ring",
     "price": 94996.57,
@@ -818,7 +1237,10 @@
       "bold"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "single",
       "setting_style": "signet",
       "design_pattern": "sculpted",
@@ -826,11 +1248,28 @@
       "weight_range": "medium",
       "style_intensity": 8,
       "formality_level": 6,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "square"],
-      "outfit_style": ["modern", "artistic", "casual"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "modern",
+        "artistic",
+        "casual"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "medium",
       "trendiness": "trendy",
@@ -840,9 +1279,10 @@
     }
   },
   {
+    "id": "product-22",
     "category": "Ring",
     "product_name": "Elyse Round Diamond Solitaire",
-    "price": 146406.0,
+    "price": 146406,
     "collection_name": null,
     "image_url": "https://evoljewels.com/cdn/shop/files/SRNG588067__06.webp?v=1.734421179e+09&width=1946",
     "tags": [
@@ -858,7 +1298,10 @@
       "romantic"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "single",
       "setting_style": "solitaire",
       "design_pattern": "classic",
@@ -866,11 +1309,28 @@
       "weight_range": "light",
       "style_intensity": 6,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "round", "heart"],
-      "outfit_style": ["formal", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "round",
+        "heart"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "low",
       "investment_value": "high",
       "trendiness": "timeless",
@@ -880,6 +1340,7 @@
     }
   },
   {
+    "id": "product-23",
     "category": "Ring",
     "product_name": "Colossus Diamond Halo Ring",
     "price": 183617.77,
@@ -898,7 +1359,10 @@
       "impressive"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "halo",
       "design_pattern": "colossus",
@@ -906,11 +1370,26 @@
       "weight_range": "very-heavy",
       "style_intensity": 10,
       "formality_level": 9,
-      "age_group": ["mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart"],
-      "outfit_style": ["formal", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "high",
       "investment_value": "very-high",
       "trendiness": "classic",
@@ -920,6 +1399,7 @@
     }
   },
   {
+    "id": "product-24",
     "category": "Ring",
     "product_name": "Gracie Diamond Eternity Ring",
     "price": 263352.2,
@@ -938,7 +1418,10 @@
       "wedding"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "eternity",
       "design_pattern": "classic",
@@ -946,11 +1429,28 @@
       "weight_range": "medium",
       "style_intensity": 7,
       "formality_level": 9,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["formal", "wedding", "special-occasion"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "formal",
+        "wedding",
+        "special-occasion"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "very-high",
       "trendiness": "timeless",
@@ -960,6 +1460,7 @@
     }
   },
   {
+    "id": "product-25",
     "category": "Ring",
     "product_name": "Bold Pear Diamond Ring",
     "price": 112516.85,
@@ -978,7 +1479,10 @@
       "dramatic"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "single",
       "setting_style": "pear",
       "design_pattern": "bold",
@@ -986,11 +1490,27 @@
       "weight_range": "medium",
       "style_intensity": 9,
       "formality_level": 7,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart"],
-      "outfit_style": ["special-occasion", "evening", "artistic"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart"
+      ],
+      "outfit_style": [
+        "special-occasion",
+        "evening",
+        "artistic"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "timeless",
@@ -1000,6 +1520,7 @@
     }
   },
   {
+    "id": "product-26",
     "category": "Pendant",
     "product_name": "Butterfly Whimsy Diamond Pendant",
     "price": 48196.36,
@@ -1018,7 +1539,10 @@
       "romantic"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "butterfly",
       "design_pattern": "organic",
@@ -1026,11 +1550,29 @@
       "weight_range": "light",
       "style_intensity": 4,
       "formality_level": 3,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["casual", "romantic", "everyday"],
-      "season_appropriate": ["spring", "summer"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "casual",
+        "romantic",
+        "everyday"
+      ],
+      "season_appropriate": [
+        "spring",
+        "summer"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "timeless",
@@ -1040,6 +1582,7 @@
     }
   },
   {
+    "id": "product-27",
     "category": "Pendant",
     "product_name": "Swirl Drop Diamond Pendant",
     "price": 43684.22,
@@ -1058,7 +1601,10 @@
       "statement"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "drop",
       "design_pattern": "swirl",
@@ -1066,11 +1612,27 @@
       "weight_range": "medium",
       "style_intensity": 6,
       "formality_level": 5,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["cool", "neutral"],
-      "face_shape_suitability": ["oval", "round", "heart"],
-      "outfit_style": ["modern", "artistic", "casual"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "round",
+        "heart"
+      ],
+      "outfit_style": [
+        "modern",
+        "artistic",
+        "casual"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "medium",
       "trendiness": "trendy",
@@ -1080,6 +1642,7 @@
     }
   },
   {
+    "id": "product-28",
     "category": "Pendant",
     "product_name": "Diamond Embrace Pendant",
     "price": 61633.71,
@@ -1098,7 +1661,10 @@
       "emotional"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "embrace",
       "design_pattern": "floral",
@@ -1106,11 +1672,29 @@
       "weight_range": "light",
       "style_intensity": 5,
       "formality_level": 6,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["romantic", "special-occasion", "feminine"],
-      "season_appropriate": ["spring", "summer"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "romantic",
+        "special-occasion",
+        "feminine"
+      ],
+      "season_appropriate": [
+        "spring",
+        "summer"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "timeless",
@@ -1120,6 +1704,7 @@
     }
   },
   {
+    "id": "product-29",
     "category": "Pendant",
     "product_name": "Modern Layered Diamond Pendant ",
     "price": 56855.99,
@@ -1138,7 +1723,10 @@
       "cultural"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "layered",
       "design_pattern": "tribal",
@@ -1146,11 +1734,28 @@
       "weight_range": "medium",
       "style_intensity": 7,
       "formality_level": 5,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "round", "heart"],
-      "outfit_style": ["modern", "artistic", "casual"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "round",
+        "heart"
+      ],
+      "outfit_style": [
+        "modern",
+        "artistic",
+        "casual"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "medium",
       "trendiness": "trendy",
@@ -1160,6 +1765,7 @@
     }
   },
   {
+    "id": "product-30",
     "category": "Pendant",
     "product_name": "Zuri Diamond Pendant",
     "price": 71835.44,
@@ -1178,7 +1784,10 @@
       "confident"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "zuri",
       "design_pattern": "modern",
@@ -1186,11 +1795,28 @@
       "weight_range": "medium",
       "style_intensity": 7,
       "formality_level": 6,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "square"],
-      "outfit_style": ["modern", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "modern",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "medium",
       "trendiness": "trendy",
@@ -1200,6 +1826,7 @@
     }
   },
   {
+    "id": "product-31",
     "category": "Pendant",
     "product_name": "Infinitum Diamond Pendant",
     "price": 39284.93,
@@ -1218,7 +1845,10 @@
       "timeless"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "infinity",
       "design_pattern": "symbolic",
@@ -1226,11 +1856,28 @@
       "weight_range": "light",
       "style_intensity": 5,
       "formality_level": 6,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["romantic", "special-occasion", "everyday"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "romantic",
+        "special-occasion",
+        "everyday"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "timeless",
@@ -1240,6 +1887,7 @@
     }
   },
   {
+    "id": "product-32",
     "category": "Pendant",
     "product_name": "Apollo Diamond Pendant",
     "price": 176982.14,
@@ -1258,7 +1906,10 @@
       "powerful"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "apollo",
       "design_pattern": "mythological",
@@ -1266,11 +1917,28 @@
       "weight_range": "medium",
       "style_intensity": 8,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "square"],
-      "outfit_style": ["formal", "special-occasion", "artistic"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "square"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "artistic"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "timeless",
@@ -1280,6 +1948,7 @@
     }
   },
   {
+    "id": "product-33",
     "category": "Pendant",
     "product_name": "My Beloved Diamond Pendant",
     "price": 97157.72,
@@ -1298,7 +1967,10 @@
       "love"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "beloved",
       "design_pattern": "romantic",
@@ -1306,11 +1978,28 @@
       "weight_range": "light",
       "style_intensity": 6,
       "formality_level": 7,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["romantic", "special-occasion", "sentimental"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "romantic",
+        "special-occasion",
+        "sentimental"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "low",
       "investment_value": "high",
       "trendiness": "timeless",
@@ -1320,6 +2009,7 @@
     }
   },
   {
+    "id": "product-34",
     "category": "Pendant",
     "product_name": "Circle Of Life Diamond Pendant",
     "price": 34476.48,
@@ -1338,7 +2028,10 @@
       "timeless"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "circle",
       "design_pattern": "symbolic",
@@ -1346,11 +2039,30 @@
       "weight_range": "light",
       "style_intensity": 4,
       "formality_level": 4,
-      "age_group": ["young-adult", "adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round", "square"],
-      "outfit_style": ["everyday", "spiritual", "casual"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round",
+        "square"
+      ],
+      "outfit_style": [
+        "everyday",
+        "spiritual",
+        "casual"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "timeless",
@@ -1360,6 +2072,7 @@
     }
   },
   {
+    "id": "product-35",
     "category": "Pendant",
     "product_name": "Helios Diamond Halo Pendant",
     "price": 180317.52,
@@ -1378,7 +2091,10 @@
       "powerful"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "halo",
       "design_pattern": "celestial",
@@ -1386,11 +2102,28 @@
       "weight_range": "medium",
       "style_intensity": 8,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["formal", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "high",
       "trendiness": "timeless",
@@ -1400,6 +2133,7 @@
     }
   },
   {
+    "id": "product-36",
     "category": "Pendant",
     "product_name": "Eden Diamond Pendant",
     "price": 46131.6,
@@ -1418,7 +2152,10 @@
       "meaningful"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "eden",
       "design_pattern": "nature-inspired",
@@ -1426,11 +2163,29 @@
       "weight_range": "light",
       "style_intensity": 6,
       "formality_level": 7,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["romantic", "special-occasion", "artistic"],
-      "season_appropriate": ["spring", "summer"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "romantic",
+        "special-occasion",
+        "artistic"
+      ],
+      "season_appropriate": [
+        "spring",
+        "summer"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "timeless",
@@ -1440,6 +2195,7 @@
     }
   },
   {
+    "id": "product-37",
     "category": "Pendant",
     "product_name": "Davina Diamond Halo Pendant",
     "price": 50446.46,
@@ -1458,7 +2214,10 @@
       "statement"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "halo",
       "design_pattern": "elegant",
@@ -1466,11 +2225,28 @@
       "weight_range": "light",
       "style_intensity": 6,
       "formality_level": 7,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["romantic", "special-occasion", "feminine"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "romantic",
+        "special-occasion",
+        "feminine"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "timeless",
@@ -1480,6 +2256,7 @@
     }
   },
   {
+    "id": "product-38",
     "category": "Pendant",
     "product_name": "Heart Diamond Pendant ",
     "price": 235460.03,
@@ -1498,7 +2275,10 @@
       "meaningful"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "heart",
       "design_pattern": "symbolic",
@@ -1506,11 +2286,28 @@
       "weight_range": "medium",
       "style_intensity": 8,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["romantic", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "romantic",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "medium",
       "investment_value": "very-high",
       "trendiness": "timeless",
@@ -1520,6 +2317,7 @@
     }
   },
   {
+    "id": "product-39",
     "category": "Pendant",
     "product_name": "Valentine Diamond Pendant",
     "price": 34670.55,
@@ -1538,7 +2336,10 @@
       "meaningful"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "valentine",
       "design_pattern": "romantic",
@@ -1546,11 +2347,28 @@
       "weight_range": "light",
       "style_intensity": 6,
       "formality_level": 7,
-      "age_group": ["young-adult", "adult"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "heart", "round"],
-      "outfit_style": ["romantic", "special-occasion", "cultural"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "young-adult",
+        "adult"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "heart",
+        "round"
+      ],
+      "outfit_style": [
+        "romantic",
+        "special-occasion",
+        "cultural"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "low",
       "investment_value": "medium",
       "trendiness": "timeless",
@@ -1560,6 +2378,7 @@
     }
   },
   {
+    "id": "product-40",
     "category": "Bracelet",
     "product_name": "Regal Crown Bangle Bracelet",
     "price": 167725.11,
@@ -1578,7 +2397,10 @@
       "bold"
     ],
     "metadata": {
-      "materials": ["diamond", "gold"],
+      "materials": [
+        "diamond",
+        "gold"
+      ],
       "gemstone_count": "multiple",
       "setting_style": "crown",
       "design_pattern": "tribal",
@@ -1586,11 +2408,28 @@
       "weight_range": "heavy",
       "style_intensity": 9,
       "formality_level": 8,
-      "age_group": ["adult", "mature"],
-      "skin_tone_compatibility": ["warm", "cool", "neutral"],
-      "face_shape_suitability": ["oval", "round", "heart"],
-      "outfit_style": ["formal", "special-occasion", "evening"],
-      "season_appropriate": ["all"],
+      "age_group": [
+        "adult",
+        "mature"
+      ],
+      "skin_tone_compatibility": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
+      "face_shape_suitability": [
+        "oval",
+        "round",
+        "heart"
+      ],
+      "outfit_style": [
+        "formal",
+        "special-occasion",
+        "evening"
+      ],
+      "season_appropriate": [
+        "all"
+      ],
       "maintenance_level": "high",
       "investment_value": "high",
       "trendiness": "classic",
