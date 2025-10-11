@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingBag, RotateCcw } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const AIRecommendationsPage = ({ surveyData, onRestart }) => {
   const [products, setProducts] = useState([]);
+  const router = useRouter();
 
   // Initialize products from surveyData
   useEffect(() => {
@@ -18,24 +20,24 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
       // Fallback to mock products if no products are provided
       setProducts([
         {
-          id: "1",
-          name: "Classic Diamond Solitaire Ring",
-          price: "$2,495",
-          image: "/product-ring.jpg",
+          id: "mock-1",
+          product_name: "Classic Diamond Solitaire Ring",
+          price: 2495,
+          image_url: "/product-ring.jpg",
           description: "Timeless elegance with a brilliant cut diamond",
         },
         {
-          id: "2",
-          name: "Elegant Gold Chain Necklace",
-          price: "$1,295",
-          image: "/product-necklace.jpg",
+          id: "mock-2",
+          product_name: "Elegant Gold Chain Necklace",
+          price: 1295,
+          image_url: "/product-necklace.jpg",
           description: "Sophisticated 18k gold chain with delicate pendant",
         },
         {
-          id: "3",
-          name: "Pearl Drop Earrings",
-          price: "$895",
-          image: "/product-earrings.jpg",
+          id: "mock-3",
+          product_name: "Pearl Drop Earrings",
+          price: 895,
+          image_url: "/product-earrings.jpg",
           description: "Lustrous pearls set in premium gold settings",
         },
       ]);
@@ -65,6 +67,14 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
       default:
         return tag.charAt(0).toUpperCase() + tag.slice(1);
     }
+  };
+
+  // Handle product click to navigate to details page
+  const handleProductClick = (product) => {
+    const id = product.id || product.product_id;
+    const userTags = tags.join(",");
+    const url = `/product/${id}?userTags=${userTags}`;
+    router.push(url);
   };
 
   return (
@@ -115,8 +125,8 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
               <Card className="premium-card overflow-hidden group hover:scale-105 transition-all duration-500 luxury-shadow">
                 <div className="aspect-square overflow-hidden bg-pearl">
                   <img
-                    src={product.image}
-                    alt={product.name}
+                    src={product.image_url || product.image}
+                    alt={product.product_name || product.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
@@ -127,18 +137,21 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                     ))}
                   </div>
                   <h3 className="text-xl font-medium text-charcoal mb-2">
-                    {product.name}
+                    {product.product_name || product.name}
                   </h3>
                   <p className="text-muted-foreground mb-4 text-sm">
                     {product.description}
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-light text-charcoal">
-                      {product.price}
+                      {typeof product.price === "number"
+                        ? `$${product.price.toLocaleString()}`
+                        : product.price}
                     </span>
                     <Button
                       size="sm"
                       className="gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)]"
+                      onClick={() => handleProductClick(product)}
                     >
                       <ShoppingBag className="w-4 h-4 mr-2" />
                       View More
