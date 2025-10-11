@@ -5,35 +5,82 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { getAIResponse } from "@/app/actions/aiResponse";
 import { Loader } from "@/components/ui/loader";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { toast } from "sonner";
+import PropTypes from "prop-types";
+import {
+  saveSessionData,
+  getSessionData,
+  getCurrentSessionId,
+  updateLastActivity,
+  getTimeUntilExpiry,
+  isSessionAboutToExpire,
+  clearCurrentSession,
+} from "@/lib/sessionManager";
 
-const ConversationalWizard = ({ userName, onComplete, onBack }) => {
+const ConversationalWizard = ({ userName, onComplete, onTimeout }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [products, setProducts] = useState(null);
+  const [showRestartDialog, setShowRestartDialog] = useState(false);
   const bottomRef = useRef(null);
+  const inactivityTimerRef = useRef(null);
+  const warningShownRef = useRef(false);
+  const sessionIdRef = useRef(null);
 
   useEffect(() => {
     const initializeConversation = async () => {
       setIsLoading(true);
       try {
-        const initialMessages = [];
+        // Get or create session
+        const sessionId = getCurrentSessionId();
+        sessionIdRef.current = sessionId;
 
-        // Get AI response for the first question
-        const response = await getAIResponse(initialMessages, userName);
-        if (response.success) {
-          const aiMessage = {
-            role: "assistant",
-            content: response.data.content,
-          };
+        // Try to restore from session
+        const sessionData = getSessionData(sessionId);
 
-          const updatedMessages = [...initialMessages, aiMessage];
-          setCurrentQuestion(response.data);
-          setMessages(updatedMessages);
+        if (
+          sessionData &&
+          sessionData.messages &&
+          sessionData.messages.length > 0
+        ) {
+          // Restore conversation from session
+          setMessages(sessionData.messages);
+          setCurrentQuestion(sessionData.currentQuestion);
+          toast.success("Conversation restored from previous session", {
+            duration: 2000,
+          });
+        } else {
+          // Start new conversation
+          const initialMessages = [];
+
+          // Get AI response for the first question
+          const response = await getAIResponse(initialMessages, userName);
+          if (response.success) {
+            const aiMessage = {
+              role: "assistant",
+              content: response.data.content,
+            };
+
+            const updatedMessages = [...initialMessages, aiMessage];
+            setCurrentQuestion(response.data);
+            setMessages(updatedMessages);
+
+            // Save initial state
+            saveSessionData(sessionId, {
+              userName,
+              messages: updatedMessages,
+              currentQuestion: response.data,
+              state: "survey",
+            });
+          }
         }
+
+        // Start inactivity timer
+        startInactivityTimer();
       } catch (error) {
         console.error("Error initializing conversation:", error);
       } finally {
@@ -42,19 +89,124 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
     };
 
     initializeConversation();
+
+    // Cleanup on unmount
+    return () => {
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+    };
   }, [userName]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, currentQuestion]);
 
+  // Inactivity timer functions
+  const startInactivityTimer = () => {
+    // Clear existing timer
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+
+    warningShownRef.current = false;
+
+    const checkInactivity = () => {
+      const sessionId = sessionIdRef.current;
+      if (!sessionId) return;
+
+      const timeRemaining = getTimeUntilExpiry(sessionId);
+
+      // Show warning at 30 seconds
+      if (isSessionAboutToExpire(sessionId) && !warningShownRef.current) {
+        warningShownRef.current = true;
+        toast.warning(
+          "Your session will expire in 30 seconds due to inactivity",
+          {
+            duration: 30000,
+            action: {
+              label: "I'm here",
+              onClick: () => {
+                resetInactivityTimer();
+              },
+            },
+          }
+        );
+      }
+
+      // Session expired
+      if (timeRemaining <= 0) {
+        handleSessionTimeout();
+        return;
+      }
+
+      // Check again in 1 second
+      inactivityTimerRef.current = setTimeout(checkInactivity, 1000);
+    };
+
+    // Start checking
+    inactivityTimerRef.current = setTimeout(checkInactivity, 1000);
+  };
+
+  const resetInactivityTimer = () => {
+    const sessionId = sessionIdRef.current;
+    if (sessionId) {
+      updateLastActivity(sessionId);
+      startInactivityTimer();
+      warningShownRef.current = false;
+    }
+  };
+
+  const handleSessionTimeout = () => {
+    toast.error("Session timed out due to inactivity", {
+      duration: 3000,
+    });
+
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+
+    // Call parent timeout handler
+    if (onTimeout) {
+      onTimeout();
+    }
+  };
+
+  const handleRestart = () => {
+    setShowRestartDialog(true);
+  };
+
+  const confirmRestart = () => {
+    setShowRestartDialog(false);
+
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+
+    // Clear ALL localStorage and session data
+    localStorage.removeItem("surveyData");
+    clearCurrentSession();
+
+    // Redirect to home for fresh start
+    window.location.href = "/";
+  };
+
+  const cancelRestart = () => {
+    setShowRestartDialog(false);
+    resetInactivityTimer(); // Reset timer when user interacts
+  };
+
   const handleOptionSelect = async (option) => {
+    // Reset inactivity timer on user interaction
+    resetInactivityTimer();
     if (isLoading) return;
 
     setIsLoading(true);
+    const optionValue =
+      typeof option === "string" ? option : option.value || option.label;
     const userMessage = {
       role: "user",
-      content: option,
+      content: optionValue,
     };
 
     try {
@@ -69,18 +221,31 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
           content: response.data.content,
         };
 
-        setMessages([...updatedMessages, aiMessage]);
+        const newMessages = [...updatedMessages, aiMessage];
+        setMessages(newMessages);
 
         if (response.data.type !== "products") {
           setCurrentQuestion(response.data);
+
+          // Save to session
+          const sessionId = sessionIdRef.current;
+          if (sessionId) {
+            saveSessionData(sessionId, {
+              userName,
+              messages: newMessages,
+              currentQuestion: response.data,
+              state: "survey",
+            });
+          }
         } else {
-          setProducts(response.data.products);
           setCurrentQuestion(null);
 
           onComplete({
             name: userName,
             products: response.data.products,
+            category: response.data.category,
             tags: response.data.tags,
+            metadata: response.data.metadata,
           });
         }
       }
@@ -94,6 +259,30 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
   return (
     <div className="min-h-screen hero-gradient px-4 py-8">
       <div className="max-w-4xl mx-auto">
+        {/* Restart Button - Top Right */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed top-4 right-4 z-10"
+        >
+          <Button
+            onClick={handleRestart}
+            className="gold-gradient text-charcoal border-0 px-6 py-3"
+          >
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Start Over
+          </Button>
+        </motion.div>
+
+        {/* Confirmation Dialog */}
+        <ConfirmDialog
+          isOpen={showRestartDialog}
+          onConfirm={confirmRestart}
+          onCancel={cancelRestart}
+          title="Are you sure you want to start over?"
+          message="Your current conversation will be lost and you'll return to the welcome screen."
+        />
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -112,15 +301,17 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
               .filter(
                 (msg) =>
                   msg.role !== "system" &&
-                  msg.content != currentQuestion?.content,
+                  msg.content != currentQuestion?.content
               )
               .map((message, index) => (
                 <motion.div
-                  key={index}
+                  key={`message-${index}-${message.content.slice(0, 20)}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className={`mb-6 ${message.role === "user" ? "text-right" : "text-left"}`}
+                  className={`mb-6 ${
+                    message.role === "user" ? "text-right" : "text-left"
+                  }`}
                 >
                   {message.role === "user" ? (
                     <div className="flex justify-end">
@@ -159,18 +350,26 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
                   {currentQuestion.options &&
                     currentQuestion.options.map((option, index) => (
                       <motion.div
-                        key={index}
+                        key={`option-${index}-${
+                          typeof option === "string"
+                            ? option
+                            : option.value || option.label
+                        }`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
                       >
                         <Card
-                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
+                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${
+                            isLoading ? "opacity-50 pointer-events-none" : ""
+                          }`}
                           onClick={() => handleOptionSelect(option)}
                         >
                           <div className="text-center p-4">
                             <h3 className="text-lg font-medium text-charcoal">
-                              {option}
+                              {typeof option === "string"
+                                ? option
+                                : option.label || option.value}
                             </h3>
                           </div>
                         </Card>
@@ -188,24 +387,15 @@ const ConversationalWizard = ({ userName, onComplete, onBack }) => {
         </div>
 
         {/* Navigation */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="flex justify-center"
-        >
-          <Button
-            variant="outline"
-            onClick={onBack}
-            className="kiosk-button border-2 px-8"
-          >
-            <ChevronLeft className="w-5 h-5 mr-2" />
-            Back
-          </Button>
-        </motion.div>
       </div>
     </div>
   );
+};
+
+ConversationalWizard.propTypes = {
+  userName: PropTypes.string,
+  onComplete: PropTypes.func.isRequired,
+  onTimeout: PropTypes.func,
 };
 
 export { ConversationalWizard };

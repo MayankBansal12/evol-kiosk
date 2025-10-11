@@ -6,14 +6,46 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { User } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import {
+  saveSessionData,
+  getCurrentSessionId,
+  getSessionData,
+} from "@/lib/sessionManager";
 
 const UserDetailsForm = ({ onNext, onBack }) => {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  // Restore data from session if available
+  useEffect(() => {
+    const sessionId = getCurrentSessionId();
+    if (sessionId) {
+      const sessionData = getSessionData(sessionId);
+      if (sessionData) {
+        if (sessionData.userName) {
+          setName(sessionData.userName);
+        }
+        if (sessionData.email) {
+          setEmail(sessionData.email);
+        }
+      }
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name.trim()) {
+      // Save to session
+      const sessionId = getCurrentSessionId();
+      if (sessionId) {
+        saveSessionData(sessionId, {
+          userName: name.trim(),
+          email: email.trim() || null,
+          state: "userDetails",
+        });
+      }
       onNext(name.trim());
     }
   };
@@ -61,18 +93,25 @@ const UserDetailsForm = ({ onNext, onBack }) => {
               />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-base font-medium">
+                Email Address{" "}
+                <span className="text-muted-foreground">(Optional)</span>
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email (optional)"
+                className="h-14 text-lg border-2 border-border/50 focus:border-gold"
+              />
+            </div>
+
             <div className="flex gap-4 pt-4">
               <Button
-                type="button"
-                variant="outline"
-                onClick={onBack}
-                className="flex-1 kiosk-button border-2"
-              >
-                Back
-              </Button>
-              <Button
                 type="submit"
-                className="flex-1 kiosk-button gold-gradient text-charcoal border-0"
+                className="flex-1 kiosk-button gold-gradient text-charcoal border-0 h-12"
                 disabled={!name.trim()}
               >
                 Continue
@@ -83,6 +122,11 @@ const UserDetailsForm = ({ onNext, onBack }) => {
       </motion.div>
     </div>
   );
+};
+
+UserDetailsForm.propTypes = {
+  onNext: PropTypes.func.isRequired,
+  onBack: PropTypes.func.isRequired,
 };
 
 export { UserDetailsForm };

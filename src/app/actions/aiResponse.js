@@ -1,6 +1,7 @@
 "use server";
 
 import { generateMockResponse, getMockProducts } from "@/lib/mockForm";
+import { filterProductsByAIResponse } from "@/lib/productHelpers";
 import { JEWELLERY_STYLIST_PROMPT } from "./prompts";
 
 /**
@@ -92,25 +93,43 @@ function parseGeminiResponse(textResponse) {
           textResponse.split("\n")[0] ||
           "What would you like to know about jewellery?",
         type: "question",
-        options: [
-          { value: "yes", label: "Yes" },
-          { value: "no", label: "No" },
-          { value: "more", label: "Tell me more" },
-          { value: "show", label: "Show me options" },
-        ],
+        options: ["Yes", "No", "Tell me more", "Show me options"],
       };
     }
 
     const jsonResponse = JSON.parse(jsonMatch[0]);
 
     if (jsonResponse.type === "products") {
-      return {
-        content:
-          jsonResponse.message || "Here are some pieces I think you'll love.",
-        type: "products",
-        products: getMockProducts(),
-        tags: jsonResponse.tags || [],
-      };
+      // Filter and score products based on AI response
+      try {
+        const category = jsonResponse.category || null;
+        const filteredProducts = filterProductsByAIResponse(
+          category,
+          jsonResponse.tags || [],
+          jsonResponse.metadata || {}
+        );
+
+        return {
+          content:
+            jsonResponse.message || "Here are some pieces I think you'll love.",
+          type: "products",
+          products: filteredProducts,
+          category: category,
+          tags: jsonResponse.tags || [],
+          metadata: jsonResponse.metadata || {},
+        };
+      } catch (error) {
+        console.error("Error filtering products:", error);
+        // Fallback to mock products if filtering fails
+        return {
+          content: "Here are some beautiful pieces I think you'll love.",
+          type: "products",
+          products: getMockProducts(),
+          category: jsonResponse.category || null,
+          tags: jsonResponse.tags || [],
+          metadata: jsonResponse.metadata || {},
+        };
+      }
     }
 
     // default to question
@@ -118,10 +137,7 @@ function parseGeminiResponse(textResponse) {
       content:
         jsonResponse.message || "What would you like to know about jewellery?",
       type: "question",
-      options: jsonResponse.options || [
-        { value: "continue", label: "Continue" },
-        { value: "restart", label: "Start over" },
-      ],
+      options: jsonResponse.options || ["Continue", "Start over"],
     };
   } catch (error) {
     console.error("Error parsing Gemini response:", error);
@@ -131,10 +147,7 @@ function parseGeminiResponse(textResponse) {
       content:
         "I'm not sure I understood. Would you like to see some jewellery options?",
       type: "question",
-      options: [
-        { value: "yes", label: "Yes, show me options" },
-        { value: "no", label: "No, ask me something else" },
-      ],
+      options: ["Yes, show me options", "No, ask me something else"],
     };
   }
 }
