@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
@@ -8,22 +8,31 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Send, X, Bot } from "lucide-react";
+import { getProductChatResponse } from "@/app/actions/aiResponse";
+import PropTypes from "prop-types";
 
 const ConsultationChat = ({ product, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 1,
       role: "assistant",
-      content: `Hello! I'm Evol-e, your personal jewelry consultant. I'd be happy to help you learn more about the ${product.product_name}. What would you like to know?`,
+      content: `Hey there! 👋 I'm Evol-e, your jewelry buddy! This ${product.product_name} is pretty special - what's on your mind? ✨`,
       timestamp: new Date(),
     },
   ]);
+  const messagesEndRef = useRef(null);
 
-  const handleSendMessage = (e) => {
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim() || isLoading) return;
 
     // Add user message
     const userMessage = {
@@ -33,20 +42,47 @@ const ConsultationChat = ({ product, children }) => {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setMessage("");
+    setIsLoading(true);
 
-    // Simulate AI response (placeholder)
-    setTimeout(() => {
-      const aiResponse = {
+    try {
+      // Get AI response
+      const response = await getProductChatResponse(updatedMessages, product);
+
+      if (response.success) {
+        const aiResponse = {
+          id: Date.now() + 1,
+          role: "assistant",
+          content: response.data.content,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, aiResponse]);
+      } else {
+        // Handle error
+        const errorResponse = {
+          id: Date.now() + 1,
+          role: "assistant",
+          content:
+            response.error ||
+            "I'm having trouble responding right now. Please try again.",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorResponse]);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      const errorResponse = {
         id: Date.now() + 1,
         role: "assistant",
-        content:
-          "Thank you for your question! I'm currently learning about this product. For now, I can tell you that this piece features beautiful craftsmanship and would make a wonderful addition to your collection. Is there anything specific about the design or materials you'd like to know more about?",
+        content: "I'm having trouble responding right now. Please try again.",
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, aiResponse]);
-    }, 1000);
+      setMessages((prev) => [...prev, errorResponse]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const formatTime = (date) => {
@@ -59,7 +95,16 @@ const ConsultationChat = ({ product, children }) => {
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md h-[600px] z-50">
+        <Dialog.Content
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md h-[600px] z-50"
+          aria-describedby="chat-description"
+        >
+          <Dialog.Title className="sr-only">
+            Chat with Evol-e about {product.product_name}
+          </Dialog.Title>
+          <div id="chat-description" className="sr-only">
+            Ask questions about this product's materials, styling, and care
+          </div>
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -129,6 +174,30 @@ const ConsultationChat = ({ product, children }) => {
                     </motion.div>
                   ))}
                 </AnimatePresence>
+
+                {/* Loading Animation */}
+                {isLoading && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex justify-start"
+                  >
+                    <Card className="premium-card p-3 inline-block">
+                      <div className="flex items-center space-x-2">
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:-0.3s]"></div>
+                          <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:-0.15s]"></div>
+                          <div className="w-2 h-2 rounded-full bg-gold animate-bounce"></div>
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          Evol-e is typing...
+                        </span>
+                      </div>
+                    </Card>
+                  </motion.div>
+                )}
+
+                <div ref={messagesEndRef} />
               </div>
 
               {/* Input Area */}
@@ -137,22 +206,29 @@ const ConsultationChat = ({ product, children }) => {
                   <Input
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Ask about this product..."
+                    placeholder={
+                      isLoading
+                        ? "Evol-e is responding..."
+                        : "Ask about materials, styling, or care..."
+                    }
                     className="flex-1"
-                    disabled
+                    disabled={isLoading}
                   />
                   <Button
                     type="submit"
                     size="sm"
                     className="gold-gradient text-charcoal border-0"
-                    disabled={!message.trim()}
+                    disabled={!message.trim() || isLoading}
                   >
-                    <Send className="w-4 h-4" />
+                    {isLoading ? (
+                      <div className="w-4 h-4 flex items-center justify-center">
+                        <div className="w-3 h-3 border-2 border-charcoal border-t-transparent rounded-full animate-spin"></div>
+                      </div>
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
                   </Button>
                 </form>
-                <p className="text-xs text-muted-foreground mt-2 text-center">
-                  Chat functionality coming soon
-                </p>
               </div>
             </Card>
           </motion.div>
@@ -160,6 +236,18 @@ const ConsultationChat = ({ product, children }) => {
       </Dialog.Portal>
     </Dialog.Root>
   );
+};
+
+ConsultationChat.propTypes = {
+  product: PropTypes.shape({
+    product_name: PropTypes.string,
+    price: PropTypes.number,
+    category: PropTypes.string,
+    description: PropTypes.string,
+    tags: PropTypes.array,
+    metadata: PropTypes.object,
+  }).isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export { ConsultationChat };

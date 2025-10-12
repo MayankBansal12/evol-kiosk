@@ -25,7 +25,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
 
   // Initialize products from surveyData
   useEffect(() => {
-    if (surveyData && surveyData.products) {
+    if (surveyData?.products) {
       setProducts(surveyData.products);
     } else {
       // Fallback to mock products if no products are provided
@@ -160,9 +160,9 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
             Evol-e recommends you these products
           </p>
           <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {tags.map((tag, index) => (
+            {tags.map((tag) => (
               <Badge
-                key={index}
+                key={tag}
                 variant="secondary"
                 className="text-sm px-4 py-2"
               >
@@ -186,8 +186,8 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <Card className="premium-card overflow-hidden group hover:scale-105 transition-all duration-500 luxury-shadow">
-                <div className="aspect-square overflow-hidden bg-pearl relative">
+              <Card className="premium-card overflow-hidden group hover:scale-105 transition-all duration-500 luxury-shadow h-full flex flex-col">
+                <div className="aspect-square overflow-hidden bg-pearl relative flex-shrink-0">
                   <img
                     src={product.image_url || product.image}
                     alt={product.product_name || product.name}
@@ -206,19 +206,22 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                     </div>
                   )}
                 </div>
-                <div className="p-6">
+                <div className="p-6 flex flex-col flex-grow">
                   <div className="flex items-center gap-1 mb-2">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-gold text-gold" />
+                      <Star
+                        key={`star-${i}`}
+                        className="w-4 h-4 fill-gold text-gold"
+                      />
                     ))}
                   </div>
-                  <h3 className="text-xl font-medium text-charcoal mb-2">
+                  <h3 className="text-xl font-medium text-charcoal mb-2 line-clamp-2 min-h-[3.5rem]">
                     {product.product_name || product.name}
                   </h3>
-                  <p className="text-muted-foreground mb-4 text-sm">
+                  <p className="text-muted-foreground mb-4 text-sm line-clamp-3 flex-grow">
                     {product.description}
                   </p>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mt-auto">
                     <span className="text-2xl font-light text-charcoal">
                       {typeof product.price === "number"
                         ? `$${product.price.toLocaleString()}`
@@ -226,7 +229,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                     </span>
                     <Button
                       size="sm"
-                      className="gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)]"
+                      className="gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] flex-shrink-0"
                       onClick={() => handleProductClick(product)}
                     >
                       <ShoppingBag className="w-4 h-4 mr-2" />

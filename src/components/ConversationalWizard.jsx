@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, ShoppingBag, ArrowLeft } from "lucide-react";
 import { getAIResponse } from "@/app/actions/aiResponse";
 import { Loader } from "@/components/ui/loader";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
@@ -21,11 +21,12 @@ import {
   clearCurrentSession,
 } from "@/lib/sessionManager";
 
-const ConversationalWizard = ({ userName, onComplete, onTimeout }) => {
+const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [showRestartDialog, setShowRestartDialog] = useState(false);
+  const [showSkipButton, setShowSkipButton] = useState(false);
   const bottomRef = useRef(null);
   const inactivityTimerRef = useRef(null);
   const warningShownRef = useRef(false);
@@ -101,6 +102,14 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout }) => {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, currentQuestion]);
+
+  // Track user messages to show skip button after 5
+  useEffect(() => {
+    const userMessageCount = messages.filter(
+      (msg) => msg.role === "user"
+    ).length;
+    setShowSkipButton(userMessageCount >= 5);
+  }, [messages]);
 
   // Inactivity timer functions
   const startInactivityTimer = () => {
@@ -196,6 +205,68 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout }) => {
     resetInactivityTimer(); // Reset timer when user interacts
   };
 
+  const handleSkipToProducts = async () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
+    try {
+      // Add a skip message to context
+      const skipMessage = {
+        role: "user",
+        content: "I'd like to skip to see products now",
+      };
+
+      const updatedMessages = [...messages, skipMessage];
+      setMessages(updatedMessages);
+      setCurrentQuestion(null);
+
+      const response = await getAIResponse(updatedMessages);
+      if (response.success) {
+        const aiMessage = {
+          role: "assistant",
+          content: response.data.content,
+        };
+
+        const newMessages = [...updatedMessages, aiMessage];
+        setMessages(newMessages);
+
+        if (response.data.type === "products") {
+          setCurrentQuestion(null);
+          onComplete({
+            name: userName,
+            products: response.data.products,
+            category: response.data.category,
+            tags: response.data.tags,
+            metadata: response.data.metadata,
+          });
+        } else {
+          // If AI doesn't return products, force it by calling with a direct request
+          const forceProductsResponse = await getAIResponse([
+            ...newMessages,
+            { role: "user", content: "Please show me jewelry products now" },
+          ]);
+
+          if (
+            forceProductsResponse.success &&
+            forceProductsResponse.data.type === "products"
+          ) {
+            onComplete({
+              name: userName,
+              products: forceProductsResponse.data.products,
+              category: forceProductsResponse.data.category,
+              tags: forceProductsResponse.data.tags,
+              metadata: forceProductsResponse.data.metadata,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error skipping to products:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleOptionSelect = async (option) => {
     // Reset inactivity timer on user interaction
     resetInactivityTimer();
@@ -257,22 +328,29 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout }) => {
   };
 
   return (
-    <div className="min-h-screen hero-gradient px-4 py-8">
+    <div className="min-h-screen hero-gradient px-4 py-8 pb-32">
       <div className="max-w-4xl mx-auto">
-        {/* Restart Button - Top Right */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed top-4 right-4 z-10"
-        >
-          <Button
-            onClick={handleRestart}
-            className="gold-gradient text-charcoal border-0 px-6 py-3"
-          >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Start Over
-          </Button>
-        </motion.div>
+        {/* Skip to Products Button - Floating */}
+        <AnimatePresence>
+          {showSkipButton && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="fixed bottom-24 right-4 z-20"
+            >
+              <Button
+                onClick={handleSkipToProducts}
+                disabled={isLoading}
+                className="gold-gradient text-charcoal border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <ShoppingBag className="w-4 h-4 mr-2" />
+                Skip to Products
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Confirmation Dialog */}
         <ConfirmDialog
@@ -337,10 +415,10 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout }) => {
               key="current-question"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-12"
+              className="mb-12 flex flex-col items-center"
             >
-              <Card className="premium-card luxury-shadow mb-6">
-                <p className="text-xl text-charcoal">
+              <Card className="premium-card luxury-shadow mb-6 max-w-2xl w-full text-center">
+                <p className="text-2xl font-medium text-charcoal leading-relaxed">
                   {currentQuestion.content}
                 </p>
               </Card>
@@ -381,12 +459,42 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout }) => {
           )}
 
           {/* Loading State */}
-          {isLoading && <Loader />}
+          {isLoading && <Loader position="bottom" />}
 
           <div ref={bottomRef} />
         </div>
 
-        {/* Navigation */}
+        {/* Fixed Bottom Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="fixed bottom-0 left-0 right-0 z-30"
+        >
+          <Card className="premium-card luxury-shadow mx-4 mb-2 border-2 border-gold/20">
+            <div className="flex justify-center gap-4 p-3">
+              {onBack && (
+                <Button
+                  onClick={onBack}
+                  variant="outline"
+                  className="h-12 px-4 text-sm font-medium border-2 border-gold/30 bg-white text-charcoal hover:bg-gold/10 hover:border-gold/50 transition-all duration-300 flex-shrink-0"
+                  style={{ minWidth: "80px", maxWidth: "120px" }}
+                >
+                  <ArrowLeft className="w-4 h-4 mr-1" />
+                  Back
+                </Button>
+              )}
+              <Button
+                onClick={handleRestart}
+                className="h-12 px-6 text-sm font-medium gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] transition-all duration-300 flex-shrink-0"
+                style={{ minWidth: "120px", maxWidth: "180px" }}
+              >
+                <RotateCcw className="w-4 h-4 mr-1" />
+                Start Over
+              </Button>
+            </div>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );
@@ -396,6 +504,7 @@ ConversationalWizard.propTypes = {
   userName: PropTypes.string,
   onComplete: PropTypes.func.isRequired,
   onTimeout: PropTypes.func,
+  onBack: PropTypes.func,
 };
 
 export { ConversationalWizard };
