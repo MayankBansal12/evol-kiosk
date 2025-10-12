@@ -328,7 +328,7 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
   };
 
   return (
-    <div className="min-h-screen hero-gradient px-4 py-8">
+    <div className="min-h-screen hero-gradient px-4 py-8 pb-32">
       <div className="max-w-4xl mx-auto">
         {/* Skip to Products Button - Floating */}
         <AnimatePresence>
@@ -471,25 +471,25 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="fixed bottom-0 left-0 right-0 z-30"
         >
-          <Card className="premium-card luxury-shadow mx-4 mb-4 border-2 border-gold/20">
-            <div className="flex justify-center gap-4 p-4">
+          <Card className="premium-card luxury-shadow mx-4 mb-2 border-2 border-gold/20">
+            <div className="flex justify-center gap-4 p-3">
               {onBack && (
                 <Button
                   onClick={onBack}
                   variant="outline"
-                  className="h-14 px-6 text-base font-medium border-2 border-gold/30 bg-white text-charcoal hover:bg-gold/10 hover:border-gold/50 transition-all duration-300 flex-shrink-0"
-                  style={{ minWidth: "100px", maxWidth: "140px" }}
+                  className="h-12 px-4 text-sm font-medium border-2 border-gold/30 bg-white text-charcoal hover:bg-gold/10 hover:border-gold/50 transition-all duration-300 flex-shrink-0"
+                  style={{ minWidth: "80px", maxWidth: "120px" }}
                 >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  <ArrowLeft className="w-4 h-4 mr-1" />
                   Back
                 </Button>
               )}
               <Button
                 onClick={handleRestart}
-                className="h-14 px-8 text-base font-medium gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] transition-all duration-300 flex-shrink-0"
-                style={{ minWidth: "160px", maxWidth: "220px" }}
+                className="h-12 px-6 text-sm font-medium gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] transition-all duration-300 flex-shrink-0"
+                style={{ minWidth: "120px", maxWidth: "180px" }}
               >
-                <RotateCcw className="w-4 h-4 mr-2" />
+                <RotateCcw className="w-4 h-4 mr-1" />
                 Start Over
               </Button>
             </div>
