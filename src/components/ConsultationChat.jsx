@@ -19,7 +19,7 @@ const ConsultationChat = ({ product, children }) => {
     {
       id: 1,
       role: "assistant",
-      content: `Hi! I'm Evol-e. Ask me anything about the ${product.product_name}.`,
+      content: `Hey there! 👋 I'm Evol-e, your jewelry buddy! This ${product.product_name} is pretty special - what's on your mind? ✨`,
       timestamp: new Date(),
     },
   ]);

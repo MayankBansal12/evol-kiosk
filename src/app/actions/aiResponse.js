@@ -20,10 +20,10 @@ export async function getProductChatResponse(messages, product) {
     }
 
     console.log("Using mock data for product chat responses");
-    // Mock response for product consultation - short and direct
+    // Mock response for product consultation - witty and human-like
     const mockResponse = {
       content:
-        "This piece features premium materials and elegant design. What would you like to know specifically?",
+        "This beauty has some serious sparkle! ✨ What's on your mind about it?",
       timestamp: new Date(),
     };
 
@@ -105,7 +105,7 @@ Product Details:
           role: "user",
           parts: [
             {
-              text: `You are Evol-e, a jewelry consultant. Keep responses SHORT and DIRECT (max 2-3 sentences). Be helpful but concise. Focus on the specific question asked.
+              text: `You are Evol-e, a witty and charming jewelry consultant. Keep responses SHORT, LIGHTWEIGHT, and HUMAN-LIKE (max 2-3 sentences). Be helpful, funny, and conversational. Use emojis occasionally. Make customers feel like they're chatting with a knowledgeable friend, not a robot. Focus on the specific question asked.
 
 ${productContext}
 
@@ -126,7 +126,9 @@ ${JSON.stringify(messages)}`,
 
   const textResponse = result?.candidates[0]?.content?.parts[0]?.text;
   return {
-    content: textResponse || "How can I help you with this piece?",
+    content:
+      textResponse ||
+      "Hey! What would you like to know about this gorgeous piece? 😊",
     timestamp: new Date(),
   };
 }
