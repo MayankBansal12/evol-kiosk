@@ -5,6 +5,41 @@ import { filterProductsByAIResponse } from "@/lib/productHelpers";
 import { JEWELLERY_STYLIST_PROMPT } from "./prompts";
 
 /**
+ * Server action to get product-specific chat response
+ */
+export async function getProductChatResponse(messages, product) {
+  try {
+    const USE_MOCK_DATA =
+      process.env.USE_MOCK_DATA === "true" || !process.env.GEMINI_API_KEY;
+
+    if (!USE_MOCK_DATA) {
+      console.log("Calling Gemini API for product consultation");
+
+      const apiResponse = await callProductGeminiAPI(messages, product);
+      return { success: true, data: apiResponse };
+    }
+
+    console.log("Using mock data for product chat responses");
+    // Mock response for product consultation - short and direct
+    const mockResponse = {
+      content:
+        "This piece features premium materials and elegant design. What would you like to know specifically?",
+      timestamp: new Date(),
+    };
+
+    // Simulate delay for loading animation
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return { success: true, data: mockResponse };
+  } catch (error) {
+    console.error("Error in product chat processing:", error);
+    return {
+      success: false,
+      error: "I'm having trouble responding right now. Please try again.",
+    };
+  }
+}
+
+/**
  * Server action to interact with survey form
  */
 export async function getAIResponse(messages, userName) {
@@ -33,6 +68,67 @@ export async function getAIResponse(messages, userName) {
         "We encountered an issue with our Evol-e assistant. Please try again.",
     };
   }
+}
+
+/**
+ * Implementation of the Gemini API integration for product consultation
+ */
+async function callProductGeminiAPI(messages, product) {
+  const apiEndpoint =
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent";
+
+  const productContext = `
+Product Details:
+- Name: ${product.product_name}
+- Price: ${product.price}
+- Category: ${product.category}
+- Description: ${product.description || "No description available"}
+- Tags: ${product.tags ? product.tags.join(", ") : "No tags"}
+- Materials: ${
+    product.metadata?.materials
+      ? product.metadata.materials.join(", ")
+      : "Not specified"
+  }
+- Style Intensity: ${product.metadata?.style_intensity || "Not specified"}
+- Formality Level: ${product.metadata?.formality_level || "Not specified"}
+`;
+
+  const response = await fetch(apiEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-goog-api-key": process.env.GEMINI_API_KEY,
+    },
+    body: JSON.stringify({
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `You are Evol-e, a jewelry consultant. Keep responses SHORT and DIRECT (max 2-3 sentences). Be helpful but concise. Focus on the specific question asked.
+
+${productContext}
+
+Conversation so far:
+${JSON.stringify(messages)}`,
+            },
+          ],
+        },
+      ],
+    }),
+  });
+
+  const result = await response.json();
+  if (!result.candidates || result.candidates.length === 0) {
+    console.error("Gemini API error:", result.error || "Unknown error");
+    throw new Error("Failed to get response from Gemini API");
+  }
+
+  const textResponse = result?.candidates[0]?.content?.parts[0]?.text;
+  return {
+    content: textResponse || "How can I help you with this piece?",
+    timestamp: new Date(),
+  };
 }
 
 /**
