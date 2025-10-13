@@ -5,7 +5,14 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { RotateCcw, ShoppingBag, ArrowLeft, Mic, MicOff, Square } from "lucide-react";
+import {
+  RotateCcw,
+  ShoppingBag,
+  ArrowLeft,
+  Mic,
+  MicOff,
+  Square,
+} from "lucide-react";
 import { getAIResponse } from "@/app/actions/aiResponse";
 import { speechToText } from "@/app/actions/speechToText";
 import { Loader } from "@/components/ui/loader";
@@ -13,6 +20,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { toast } from "sonner";
 import PropTypes from "prop-types";
 import { TextToSpeechPlayer } from "@/components/TextToSpeechPlayer";
+import { EvoleCharacter } from "@/components/EvoleCharacter";
 import {
   saveSessionData,
   getSessionData,
@@ -23,7 +31,13 @@ import {
   clearCurrentSession,
 } from "@/lib/sessionManager";
 
-const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTimeout, onBack }) => {
+const ConversationalWizard = ({
+  userName,
+  languageCode = "en",
+  onComplete,
+  onTimeout,
+  onBack,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -31,6 +45,7 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [mascotState, setMascotState] = useState("idle");
   const ttsRef = useRef(null);
   const bottomRef = useRef(null);
   const inactivityTimerRef = useRef(null);
@@ -66,7 +81,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
           const initialMessages = [];
 
           // Get AI response for the first question
-          const response = await getAIResponse(initialMessages, userName, languageCode);
+          const response = await getAIResponse(
+            initialMessages,
+            userName,
+            languageCode
+          );
           if (response.success) {
             const aiMessage = {
               role: "assistant",
@@ -248,7 +267,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       setMessages(updatedMessages);
       setCurrentQuestion(null);
 
-      const response = await getAIResponse(updatedMessages, userName, languageCode);
+      const response = await getAIResponse(
+        updatedMessages,
+        userName,
+        languageCode
+      );
       if (response.success) {
         const aiMessage = {
           role: "assistant",
@@ -269,10 +292,14 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
           });
         } else {
           // If AI doesn't return products, force it by calling with a direct request
-          const forceProductsResponse = await getAIResponse([
-            ...newMessages,
-            { role: "user", content: "Please show me jewelry products now" },
-          ], userName, languageCode);
+          const forceProductsResponse = await getAIResponse(
+            [
+              ...newMessages,
+              { role: "user", content: "Please show me jewelry products now" },
+            ],
+            userName,
+            languageCode
+          );
 
           if (
             forceProductsResponse.success &&
@@ -300,6 +327,7 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
     resetInactivityTimer();
     if (isLoading) return;
 
+    setMascotState("listening");
     setIsLoading(true);
     const optionValue =
       typeof option === "string" ? option : option.value || option.label;
@@ -313,7 +341,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       setMessages(updatedMessages);
       setCurrentQuestion(null);
 
-      const response = await getAIResponse(updatedMessages, userName, languageCode);
+      const response = await getAIResponse(
+        updatedMessages,
+        userName,
+        languageCode
+      );
       if (response.success) {
         const aiMessage = {
           role: "assistant",
@@ -379,9 +411,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       };
 
       mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/webm",
+        });
         await processAudioBlob(audioBlob);
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       };
 
       mediaRecorder.start();
@@ -389,7 +423,9 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       toast.success("Recording started...");
     } catch (error) {
       console.error("Error starting recording:", error);
-      toast.error("Failed to start recording. Please check microphone permissions.");
+      toast.error(
+        "Failed to start recording. Please check microphone permissions."
+      );
     }
   };
 
@@ -408,7 +444,7 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       const reader = new FileReader();
       reader.onloadend = async () => {
         const base64Audio = reader.result;
-        const base64Url = `data:audio/webm;base64,${base64Audio.split(',')[1]}`;
+        const base64Url = `data:audio/webm;base64,${base64Audio.split(",")[1]}`;
 
         // Send to speech-to-text API
         const result = await speechToText(base64Url);
@@ -434,6 +470,7 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
     resetInactivityTimer();
     if (isLoading) return;
 
+    setMascotState("listening");
     setIsLoading(true);
     const userMessage = {
       role: "user",
@@ -445,7 +482,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       setMessages(updatedMessages);
       setCurrentQuestion(null);
 
-      const response = await getAIResponse(updatedMessages, userName, languageCode);
+      const response = await getAIResponse(
+        updatedMessages,
+        userName,
+        languageCode
+      );
       if (response.success) {
         const aiMessage = {
           role: "assistant",
@@ -497,6 +538,16 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
 
   return (
     <div className="min-h-screen hero-gradient px-4 py-8 pb-32">
+      {/* Floating Evole Mascot */}
+      <div className="fixed top-4 right-4 z-20">
+        <EvoleCharacter
+          state={isLoading ? "thinking" : mascotState}
+          size="medium"
+          showSpeechBubble={isLoading}
+          speechText={isLoading ? "Beep boop! Evole is thinking..." : ""}
+        />
+      </div>
+
       <div className="max-w-4xl mx-auto">
         {/* Skip to Products Button - Floating */}
         <AnimatePresence>
@@ -555,8 +606,9 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className={`mb-6 ${message.role === "user" ? "text-right" : "text-left"
-                    }`}
+                  className={`mb-6 ${
+                    message.role === "user" ? "text-right" : "text-left"
+                  }`}
                 >
                   {message.role === "user" ? (
                     <div className="flex justify-end">
@@ -590,7 +642,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                 </p>
                 {/* Auto-play TTS for the current AI question text */}
                 <div className="sr-only" aria-hidden>
-                  <TextToSpeechPlayer ref={ttsRef} text={currentQuestion.content} languageCode={languageCode} />
+                  <TextToSpeechPlayer
+                    ref={ttsRef}
+                    text={currentQuestion.content}
+                    languageCode={languageCode}
+                  />
                 </div>
               </Card>
 
@@ -599,17 +655,21 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                   {currentQuestion.options &&
                     currentQuestion.options.map((option, index) => (
                       <motion.div
-                        key={`option-${index}-${typeof option === "string"
-                          ? option
-                          : option.value || option.label
-                          }`}
+                        key={`option-${index}-${
+                          typeof option === "string"
+                            ? option
+                            : option.value || option.label
+                        }`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
                       >
                         <Card
-                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${isLoading || isRecording || isTranscribing ? "opacity-50 pointer-events-none" : ""
-                            }`}
+                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${
+                            isLoading || isRecording || isTranscribing
+                              ? "opacity-50 pointer-events-none"
+                              : ""
+                          }`}
                           onClick={() => handleOptionSelect(option)}
                         >
                           <div className="text-center p-4">
@@ -634,7 +694,9 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
               >
                 <Card className="premium-card luxury-shadow">
                   <div className="p-4 text-center">
-                    <p className="text-sm text-charcoal/70 mb-3">Or speak your answer:</p>
+                    <p className="text-sm text-charcoal/70 mb-3">
+                      Or speak your answer:
+                    </p>
                     {!isRecording ? (
                       <Button
                         onClick={startRecording}
@@ -660,7 +722,9 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                         className="mt-3 flex items-center justify-center"
                       >
                         <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2"></div>
-                        <span className="text-sm text-red-600 font-medium">Recording...</span>
+                        <span className="text-sm text-red-600 font-medium">
+                          Recording...
+                        </span>
                       </motion.div>
                     )}
                   </div>

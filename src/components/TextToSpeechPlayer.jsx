@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import { getSpeechForText } from "@/app/actions/textToSpeech";
 
 /**
@@ -9,7 +15,10 @@ import { getSpeechForText } from "@/app/actions/textToSpeech";
  * - Keeps audio playback separate from AI response text
  * - Converts base64 audio data to Blob URL and handles cleanup
  */
-const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, languageCode = "en", disabled }, ref) {
+const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer(
+  { text, languageCode = "en", disabled },
+  ref
+) {
   const audioRef = useRef(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -31,7 +40,11 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
     const cachedUrl = cacheRef.current.get(inputText);
     if (cachedUrl) {
       setAudioUrl((prev) => {
-        if (prev && prev !== cachedUrl && ![...cacheRef.current.values()].includes(prev)) {
+        if (
+          prev &&
+          prev !== cachedUrl &&
+          ![...cacheRef.current.values()].includes(prev)
+        ) {
           URL.revokeObjectURL(prev);
         }
         return cachedUrl;
@@ -39,6 +52,7 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
       const audioEl = audioRef.current;
       if (audioEl) {
         audioEl.src = cachedUrl;
+        audioEl.playbackRate = 1.3; // Speed up cached audio
         audioEl.autoplay = true;
         try {
           await audioEl.play();
@@ -51,9 +65,25 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
 
     setIsGenerating(true);
     try {
-      const result = await getSpeechForText(inputText, langCode || languageCode);
+      const result = await getSpeechForText(
+        inputText,
+        langCode || languageCode
+      );
       if (requestId !== lastRequestIdRef.current) return; // stale
-      if (!result?.success || !result.audio_data) return;
+
+      // Fallback to browser TTS if API fails
+      if (!result?.success || !result.audio_data) {
+        console.log("Using browser TTS fallback for faster speech");
+        if ("speechSynthesis" in window) {
+          const utterance = new SpeechSynthesisUtterance(inputText);
+          utterance.rate = 1.8; // Fast speech rate
+          utterance.pitch = 1.2; // Slightly higher pitch for robot-like voice
+          utterance.volume = 0.8;
+          utterance.lang = langCode || languageCode;
+          speechSynthesis.speak(utterance);
+        }
+        return;
+      }
 
       // Decode base64 string to Uint8Array
       const byteCharacters = atob(result.audio_data);
@@ -64,7 +94,8 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
       const byteArray = new Uint8Array(byteNumbers);
 
       // Create Blob and object URL
-      const mimeType = result.audio_format === "mp3" ? "audio/mpeg" : "audio/wav";
+      const mimeType =
+        result.audio_format === "mp3" ? "audio/mpeg" : "audio/wav";
       const blob = new Blob([byteArray], { type: mimeType });
       const url = URL.createObjectURL(blob);
 
@@ -73,7 +104,11 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
 
       // Swap URL and autoplay
       setAudioUrl((prev) => {
-        if (prev && prev !== url && ![...cacheRef.current.values()].includes(prev)) {
+        if (
+          prev &&
+          prev !== url &&
+          ![...cacheRef.current.values()].includes(prev)
+        ) {
           URL.revokeObjectURL(prev);
         }
         return url;
@@ -82,6 +117,7 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
       const audioEl = audioRef.current;
       if (audioEl) {
         audioEl.src = url;
+        audioEl.playbackRate = 1.3; // Speed up audio playback
         audioEl.autoplay = true;
         try {
           await audioEl.play();
@@ -91,6 +127,15 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
       }
     } catch (err) {
       console.error("Failed to generate or play TTS:", err);
+      // Fallback to browser TTS
+      if ("speechSynthesis" in window) {
+        const utterance = new SpeechSynthesisUtterance(inputText);
+        utterance.rate = 1.8;
+        utterance.pitch = 1.2;
+        utterance.volume = 0.8;
+        utterance.lang = langCode || languageCode;
+        speechSynthesis.speak(utterance);
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -113,6 +158,3 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
 });
 
 export { TextToSpeechPlayer };
-
-
-
