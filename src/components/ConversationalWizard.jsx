@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { RotateCcw, ShoppingBag, ArrowLeft } from "lucide-react";
+import { RotateCcw, ShoppingBag, ArrowLeft, Mic, MicOff, Square } from "lucide-react";
 import { getAIResponse } from "@/app/actions/aiResponse";
+import { speechToText } from "@/app/actions/speechToText";
 import { Loader } from "@/components/ui/loader";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { toast } from "sonner";
@@ -28,11 +29,15 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [showRestartDialog, setShowRestartDialog] = useState(false);
   const [showSkipButton, setShowSkipButton] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
   const ttsRef = useRef(null);
   const bottomRef = useRef(null);
   const inactivityTimerRef = useRef(null);
   const warningShownRef = useRef(false);
   const sessionIdRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
 
   useEffect(() => {
     const initializeConversation = async () => {
@@ -106,6 +111,10 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       if (inactivityTimerRef.current) {
         clearTimeout(inactivityTimerRef.current);
       }
+      // Stop recording if active
+      if (mediaRecorderRef.current && isRecording) {
+        mediaRecorderRef.current.stop();
+      }
     };
   }, [userName]);
 
@@ -120,6 +129,15 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
     ).length;
     setShowSkipButton(userMessageCount >= 5);
   }, [messages]);
+
+  // Cleanup recording on unmount
+  useEffect(() => {
+    return () => {
+      if (mediaRecorderRef.current && isRecording) {
+        mediaRecorderRef.current.stop();
+      }
+    };
+  }, [isRecording]);
 
   // Inactivity timer functions
   const startInactivityTimer = () => {
@@ -345,6 +363,138 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
     }
   };
 
+  // Speech-to-text functions
+  // These functions handle voice recording, conversion to base64, and transcription
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        await processAudioBlob(audioBlob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      toast.success("Recording started...");
+    } catch (error) {
+      console.error("Error starting recording:", error);
+      toast.error("Failed to start recording. Please check microphone permissions.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      toast.success("Recording stopped. Processing...");
+    }
+  };
+
+  const processAudioBlob = async (audioBlob) => {
+    setIsTranscribing(true);
+    try {
+      // Convert blob to base64
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64Audio = reader.result;
+        const base64Url = `data:audio/webm;base64,${base64Audio.split(',')[1]}`;
+
+        // Send to speech-to-text API
+        const result = await speechToText(base64Url);
+
+        if (result.success && result.text) {
+          // Use the transcribed text as user response
+          await handleVoiceResponse(result.text);
+        } else {
+          toast.error("Failed to transcribe audio. Please try again.");
+        }
+        setIsTranscribing(false);
+      };
+      reader.readAsDataURL(audioBlob);
+    } catch (error) {
+      console.error("Error processing audio:", error);
+      toast.error("Error processing audio. Please try again.");
+      setIsTranscribing(false);
+    }
+  };
+
+  const handleVoiceResponse = async (transcribedText) => {
+    // Reset inactivity timer on user interaction
+    resetInactivityTimer();
+    if (isLoading) return;
+
+    setIsLoading(true);
+    const userMessage = {
+      role: "user",
+      content: transcribedText,
+    };
+
+    try {
+      const updatedMessages = [...messages, userMessage];
+      setMessages(updatedMessages);
+      setCurrentQuestion(null);
+
+      const response = await getAIResponse(updatedMessages, userName, languageCode);
+      if (response.success) {
+        const aiMessage = {
+          role: "assistant",
+          content: response.data.content,
+        };
+
+        const newMessages = [...updatedMessages, aiMessage];
+        setMessages(newMessages);
+
+        if (response.data.type !== "products") {
+          setCurrentQuestion(response.data);
+          // Kick off TTS immediately for low latency
+          try {
+            if (response?.data?.content) {
+              ttsRef.current?.playText(response.data.content, languageCode);
+            }
+          } catch (e) {
+            // no-op
+          }
+
+          // Save to session
+          const sessionId = sessionIdRef.current;
+          if (sessionId) {
+            saveSessionData(sessionId, {
+              userName,
+              messages: newMessages,
+              currentQuestion: response.data,
+              state: "survey",
+            });
+          }
+        } else {
+          setCurrentQuestion(null);
+
+          onComplete({
+            name: userName,
+            products: response.data.products,
+            category: response.data.category,
+            tags: response.data.tags,
+            metadata: response.data.metadata,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error handling voice response:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen hero-gradient px-4 py-8 pb-32">
       <div className="max-w-4xl mx-auto">
@@ -405,9 +555,8 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className={`mb-6 ${
-                    message.role === "user" ? "text-right" : "text-left"
-                  }`}
+                  className={`mb-6 ${message.role === "user" ? "text-right" : "text-left"
+                    }`}
                 >
                   {message.role === "user" ? (
                     <div className="flex justify-end">
@@ -450,19 +599,17 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                   {currentQuestion.options &&
                     currentQuestion.options.map((option, index) => (
                       <motion.div
-                        key={`option-${index}-${
-                          typeof option === "string"
-                            ? option
-                            : option.value || option.label
-                        }`}
+                        key={`option-${index}-${typeof option === "string"
+                          ? option
+                          : option.value || option.label
+                          }`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
                       >
                         <Card
-                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${
-                            isLoading ? "opacity-50 pointer-events-none" : ""
-                          }`}
+                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${isLoading || isRecording || isTranscribing ? "opacity-50 pointer-events-none" : ""
+                            }`}
                           onClick={() => handleOptionSelect(option)}
                         >
                           <div className="text-center p-4">
@@ -477,6 +624,48 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                     ))}
                 </AnimatePresence>
               </div>
+
+              {/* Voice Recording Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="mt-2 mb-6 flex justify-center"
+              >
+                <Card className="premium-card luxury-shadow">
+                  <div className="p-4 text-center">
+                    <p className="text-sm text-charcoal/70 mb-3">Or speak your answer:</p>
+                    {!isRecording ? (
+                      <Button
+                        onClick={startRecording}
+                        disabled={isLoading || isTranscribing}
+                        className="gold-gradient text-charcoal border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                      >
+                        <Mic className="w-5 h-5 mr-2" />
+                        {isTranscribing ? "Processing..." : "Start Recording"}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={stopRecording}
+                        className="bg-red-500 hover:bg-red-600 text-white border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                      >
+                        <Square className="w-5 h-5 mr-2" />
+                        Stop Recording
+                      </Button>
+                    )}
+                    {isRecording && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="mt-3 flex items-center justify-center"
+                      >
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2"></div>
+                        <span className="text-sm text-red-600 font-medium">Recording...</span>
+                      </motion.div>
+                    )}
+                  </div>
+                </Card>
+              </motion.div>
             </motion.div>
           )}
 
