@@ -13,10 +13,12 @@ import {
   getCurrentSessionId,
   getSessionData,
 } from "@/lib/sessionManager";
+import languages from "@/data/languages.json";
 
 const UserDetailsForm = ({ onNext, onBack }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [language, setLanguage] = useState("en");
 
   // Restore data from session if available
   useEffect(() => {
@@ -29,6 +31,9 @@ const UserDetailsForm = ({ onNext, onBack }) => {
         }
         if (sessionData.email) {
           setEmail(sessionData.email);
+        }
+        if (sessionData.language) {
+          setLanguage(sessionData.language);
         }
       }
     }
@@ -43,10 +48,11 @@ const UserDetailsForm = ({ onNext, onBack }) => {
         saveSessionData(sessionId, {
           userName: name.trim(),
           email: email.trim() || null,
+          language: language,
           state: "userDetails",
         });
       }
-      onNext(name.trim());
+      onNext(name.trim(), language);
     }
   };
 
@@ -91,6 +97,24 @@ const UserDetailsForm = ({ onNext, onBack }) => {
                 className="h-14 text-lg border-2 border-border/50 focus:border-gold"
                 required
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="language" className="text-base font-medium">
+                Language
+              </Label>
+              <select
+                id="language"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="h-14 text-lg border-2 border-border/50 focus:border-gold rounded-md px-3 w-full bg-white"
+              >
+                {languages.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.value}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="space-y-2">

@@ -9,7 +9,7 @@ import { getSpeechForText } from "@/app/actions/textToSpeech";
  * - Keeps audio playback separate from AI response text
  * - Converts base64 audio data to Blob URL and handles cleanup
  */
-const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, disabled }, ref) {
+const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, languageCode = "en", disabled }, ref) {
   const audioRef = useRef(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -23,7 +23,7 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, disabl
     };
   }, [audioUrl]);
 
-  const generateAndPlayInternal = async (inputText) => {
+  const generateAndPlayInternal = async (inputText, langCode) => {
     if (!inputText || disabled) return;
     const requestId = ++lastRequestIdRef.current;
 
@@ -51,7 +51,7 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, disabl
 
     setIsGenerating(true);
     try {
-      const result = await getSpeechForText(inputText);
+      const result = await getSpeechForText(inputText, langCode || languageCode);
       if (requestId !== lastRequestIdRef.current) return; // stale
       if (!result?.success || !result.audio_data) return;
 
@@ -98,14 +98,14 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, disabl
 
   // Expose imperative API so parent can start generation immediately when text is known
   useImperativeHandle(ref, () => ({
-    playText: (t) => generateAndPlayInternal(t),
+    playText: (t, lang) => generateAndPlayInternal(t, lang || languageCode),
   }));
 
   // Still respond to prop changes as a fallback
   useEffect(() => {
     if (!text || disabled) return;
-    generateAndPlayInternal(text);
-  }, [text, disabled]);
+    generateAndPlayInternal(text, languageCode);
+  }, [text, disabled, languageCode]);
 
   return (
     <audio ref={audioRef} src={audioUrl || undefined} aria-hidden="true" />
