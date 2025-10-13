@@ -7,23 +7,30 @@ export async function speechToText(audioBase64Url) {
         if (!audioBase64Url) {
             return { success: false };
         }
-        const response = await fetch(API_ENDPOINT_FOR_TRANSCRIPTION, {
+
+        // Convert base64 data URL to blob
+        const response = await fetch(audioBase64Url);
+        const audioBlob = await response.blob();
+
+        // Create form data for multipart upload
+        const formData = new FormData();
+        formData.append('file', audioBlob, 'audio.webm');
+        formData.append('model', 'whisper-large-v3-turbo');
+
+        const apiResponse = await fetch(API_ENDPOINT_FOR_TRANSCRIPTION, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
                 Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
             },
-            body: JSON.stringify({
-                url: audioBase64Url,
-                model: "whisper-large-v3-turbo",
-            })
-        })
-        if (!response.ok) {
-            console.error("GROQ STT API error:", response.status);
+            body: formData
+        });
+
+        if (!apiResponse.ok) {
+            console.error("GROQ STT API error:", apiResponse.status);
             return { success: false };
         }
 
-        const result = await response.json();
+        const result = await apiResponse.json();
         console.log("transcribed text: ", result.text)
 
         return {
