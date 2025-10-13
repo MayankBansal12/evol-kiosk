@@ -28,7 +28,7 @@ export async function getSpeechForText(inputText, languageCode = "en") {
       },
       body: JSON.stringify({
         input: inputText,
-        // voice_id: "kristy",
+        voice_id: "kristy",
         emotion: "energetic",
         target_language: languageCode,
         speed: 1.5,
