@@ -11,6 +11,7 @@ import { Loader } from "@/components/ui/loader";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { toast } from "sonner";
 import PropTypes from "prop-types";
+import { TextToSpeechPlayer } from "@/components/TextToSpeechPlayer";
 import {
   saveSessionData,
   getSessionData,
@@ -27,6 +28,7 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [showRestartDialog, setShowRestartDialog] = useState(false);
   const [showSkipButton, setShowSkipButton] = useState(false);
+  const ttsRef = useRef(null);
   const bottomRef = useRef(null);
   const inactivityTimerRef = useRef(null);
   const warningShownRef = useRef(false);
@@ -77,6 +79,14 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
               currentQuestion: response.data,
               state: "survey",
             });
+          }
+          // Kick off TTS immediately for low latency
+          try {
+            if (response?.data?.content) {
+              ttsRef.current?.playText(response.data.content);
+            }
+          } catch (e) {
+            // no-op
           }
         }
 
@@ -297,6 +307,14 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
 
         if (response.data.type !== "products") {
           setCurrentQuestion(response.data);
+          // Kick off TTS immediately for low latency
+          try {
+            if (response?.data?.content) {
+              ttsRef.current?.playText(response.data.content);
+            }
+          } catch (e) {
+            // no-op
+          }
 
           // Save to session
           const sessionId = sessionIdRef.current;
@@ -421,6 +439,10 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
                 <p className="text-2xl font-medium text-charcoal leading-relaxed">
                   {currentQuestion.content}
                 </p>
+                {/* Auto-play TTS for the current AI question text */}
+                <div className="sr-only" aria-hidden>
+                  <TextToSpeechPlayer ref={ttsRef} text={currentQuestion.content} />
+                </div>
               </Card>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
