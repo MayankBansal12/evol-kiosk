@@ -8,13 +8,7 @@ This is a Next.js-based conversational AI jewellery kiosk that uses Gemini 2.5 F
 
 First, set up your `.env` from the `.env.example` file:
 
-```bash
-# .env.local
-GEMINI_API_KEY="your_api_key_here"
-USE_MOCK_DATA="false" # Set to "true" to use mock data instead of AI
-```
-
-If you don't have an API key, you can set `USE_MOCK_DATA="true"` to use simulated responses.
+If you don't have an Gemini API key, you can set `USE_MOCK_DATA="true"` to use simulated responses.
 
 ### Start the development server
 
