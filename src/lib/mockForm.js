@@ -76,7 +76,7 @@ function generateNextQuestion(messages, userName) {
   // First message - introduction
   if (userMessages.length === 0) {
     return {
-      content: `Hello${personalizedGreeting}! I am Evol-e. May I ask who you're looking to buy jewelry for?`,
+      content: `Hello${personalizedGreeting}! Who's this jewelry for?`,
       type: "question",
       options: ["self", "partner", "family", "friend", "other"],
     };
@@ -85,7 +85,7 @@ function generateNextQuestion(messages, userName) {
   // Follow-up questions based on what hasn't been asked yet
   if (!hasAskedAboutType) {
     return {
-      content: `Wonderful${personalizedGreeting}! What type of jewelry piece are you interested in today?`,
+      content: `What jewelry piece interests you?`,
       type: "question",
       options: ["ring", "necklace", "bracelet", "earrings", "watch", "other"],
     };
@@ -93,7 +93,7 @@ function generateNextQuestion(messages, userName) {
 
   if (!hasAskedAboutOccasion) {
     return {
-      content: `Excellent choice! And what's the occasion you're shopping for?`,
+      content: `What's the occasion?`,
       type: "question",
       options: [
         "everyday",
@@ -108,7 +108,7 @@ function generateNextQuestion(messages, userName) {
 
   if (!hasAskedAboutBudget) {
     return {
-      content: `And what price range are you considering for this piece?`,
+      content: `What's your budget range?`,
       type: "question",
       options: ["budget", "mid-range", "premium", "luxury"],
     };
@@ -116,7 +116,7 @@ function generateNextQuestion(messages, userName) {
 
   if (!hasAskedAboutStyle) {
     return {
-      content: `Thank you! Now, which style do you find yourself drawn to?`,
+      content: `Which style appeals to you?`,
       type: "question",
       options: ["classic", "modern", "vintage", "minimal", "statement"],
     };

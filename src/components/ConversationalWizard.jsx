@@ -537,239 +537,276 @@ const ConversationalWizard = ({
   };
 
   return (
-    <div className="min-h-screen hero-gradient px-4 py-8 pb-32">
-      {/* Floating Evole Mascot */}
-      <div className="fixed top-4 right-4 z-20">
-        <EvoleCharacter
-          state={isLoading ? "thinking" : mascotState}
-          size="medium"
-          showSpeechBubble={isLoading}
-          speechText={isLoading ? "Beep boop! Evole is thinking..." : ""}
-        />
-      </div>
-
-      <div className="max-w-4xl mx-auto">
-        {/* Skip to Products Button - Floating */}
-        <AnimatePresence>
-          {showSkipButton && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: 20 }}
-              transition={{ duration: 0.3 }}
-              className="fixed bottom-24 right-4 z-20"
-            >
-              <Button
-                onClick={handleSkipToProducts}
-                disabled={isLoading}
-                className="gold-gradient text-charcoal border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <ShoppingBag className="w-4 h-4 mr-2" />
-                Skip to Products
-              </Button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Confirmation Dialog */}
-        <ConfirmDialog
-          isOpen={showRestartDialog}
-          onConfirm={confirmRestart}
-          onCancel={cancelRestart}
-          title="Are you sure you want to start over?"
-          message="Your current conversation will be lost and you'll return to the welcome screen."
-        />
-
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <h1 className="text-3xl font-light text-charcoal mb-4">
-            <span className="font-medium">Evol-</span> e
-          </h1>
-        </motion.div>
-
-        {/* Conversation History */}
-        <div className="mb-12 max-w-2xl mx-auto">
-          <AnimatePresence>
-            {messages
-              .filter(
-                (msg) =>
-                  msg.role !== "system" &&
-                  msg.content != currentQuestion?.content
-              )
-              .map((message, index) => (
-                <motion.div
-                  key={`message-${index}-${message.content.slice(0, 20)}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className={`mb-6 ${
-                    message.role === "user" ? "text-right" : "text-left"
-                  }`}
-                >
-                  {message.role === "user" ? (
-                    <div className="flex justify-end">
-                      <Badge
-                        variant="secondary"
-                        className="inline-block py-2 px-4 text-base bg-secondary/80"
-                      >
-                        {message.content}
-                      </Badge>
-                    </div>
-                  ) : (
-                    <Card className="inline-block premium-card max-w-[85%] p-4 luxury-shadow">
-                      <p className="text-lg text-charcoal">{message.content}</p>
-                    </Card>
-                  )}
-                </motion.div>
-              ))}
-          </AnimatePresence>
-
-          {/* Current Question Options */}
-          {currentQuestion && (
-            <motion.div
-              key="current-question"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-12 flex flex-col items-center"
-            >
-              <Card className="premium-card luxury-shadow mb-6 max-w-2xl w-full text-center">
-                <p className="text-2xl font-medium text-charcoal leading-relaxed">
-                  {currentQuestion.content}
-                </p>
-                {/* Auto-play TTS for the current AI question text */}
-                <div className="sr-only" aria-hidden>
-                  <TextToSpeechPlayer
-                    ref={ttsRef}
-                    text={currentQuestion.content}
-                    languageCode={languageCode}
-                  />
-                </div>
-              </Card>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <AnimatePresence>
-                  {currentQuestion.options &&
-                    currentQuestion.options.map((option, index) => (
-                      <motion.div
-                        key={`option-${index}-${
-                          typeof option === "string"
-                            ? option
-                            : option.value || option.label
-                        }`}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
-                      >
-                        <Card
-                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${
-                            isLoading || isRecording || isTranscribing
-                              ? "opacity-50 pointer-events-none"
-                              : ""
-                          }`}
-                          onClick={() => handleOptionSelect(option)}
-                        >
-                          <div className="text-center p-4">
-                            <h3 className="text-lg font-medium text-charcoal">
-                              {typeof option === "string"
-                                ? option
-                                : option.label || option.value}
-                            </h3>
-                          </div>
-                        </Card>
-                      </motion.div>
-                    ))}
-                </AnimatePresence>
-              </div>
-
-              {/* Voice Recording Button */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="mt-2 mb-6 flex justify-center"
-              >
-                <Card className="premium-card luxury-shadow">
-                  <div className="p-4 text-center">
-                    <p className="text-sm text-charcoal/70 mb-3">
-                      Or speak your answer:
-                    </p>
-                    {!isRecording ? (
-                      <Button
-                        onClick={startRecording}
-                        disabled={isLoading || isTranscribing}
-                        className="gold-gradient text-charcoal border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
-                        <Mic className="w-5 h-5 mr-2" />
-                        {isTranscribing ? "Processing..." : "Start Recording"}
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={stopRecording}
-                        className="bg-red-500 hover:bg-red-600 text-white border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
-                        <Square className="w-5 h-5 mr-2" />
-                        Stop Recording
-                      </Button>
-                    )}
-                    {isRecording && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="mt-3 flex items-center justify-center"
-                      >
-                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2"></div>
-                        <span className="text-sm text-red-600 font-medium">
-                          Recording...
-                        </span>
-                      </motion.div>
-                    )}
-                  </div>
-                </Card>
-              </motion.div>
-            </motion.div>
-          )}
-
-          {/* Loading State */}
-          {isLoading && <Loader position="bottom" />}
-
-          <div ref={bottomRef} />
-        </div>
-
-        {/* Fixed Bottom Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          className="fixed bottom-0 left-0 right-0 z-30"
-        >
-          <Card className="premium-card luxury-shadow mx-4 mb-2 border-2 border-gold/20">
-            <div className="flex justify-center gap-4 p-3">
+    <div className="min-h-screen hero-gradient">
+      {/* Luxury Top Navbar */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-gold/20 shadow-lg"
+      >
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Left side - Back button */}
+            <div className="flex items-center space-x-4">
               {onBack && (
                 <Button
                   onClick={onBack}
                   variant="outline"
-                  className="h-12 px-4 text-sm font-medium border-2 border-gold/30 bg-white text-charcoal hover:bg-gold/10 hover:border-gold/50 transition-all duration-300 flex-shrink-0"
-                  style={{ minWidth: "80px", maxWidth: "120px" }}
+                  className="h-10 px-4 text-sm font-medium border-2 border-gold/30 bg-white text-charcoal hover:bg-gold/10 hover:border-gold/50 transition-all duration-300 rounded-full"
                 >
-                  <ArrowLeft className="w-4 h-4 mr-1" />
+                  <ArrowLeft className="w-4 h-4 mr-2" />
                   Back
                 </Button>
               )}
+            </div>
+
+            {/* Center - Logo */}
+            <div className="flex items-center">
+              <h1 className="text-2xl font-light text-charcoal">
+                <span className="font-medium">Evol-</span> e
+              </h1>
+            </div>
+
+            {/* Right side - Start Over button */}
+            <div className="flex items-center space-x-4">
               <Button
                 onClick={handleRestart}
-                className="h-12 px-6 text-sm font-medium gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] transition-all duration-300 flex-shrink-0"
-                style={{ minWidth: "120px", maxWidth: "180px" }}
+                className="h-10 px-4 text-sm font-medium gold-gradient text-charcoal border-0 hover:shadow-lg transition-all duration-300 rounded-full"
               >
-                <RotateCcw className="w-4 h-4 mr-1" />
+                <RotateCcw className="w-4 h-4 mr-2" />
                 Start Over
               </Button>
             </div>
-          </Card>
-        </motion.div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Content with top padding for navbar */}
+      <div className="pt-20 px-4 py-8 pb-32">
+        {/* Floating Evole Mascot */}
+        <div className="fixed top-20 right-4 z-20">
+          <EvoleCharacter
+            state={isLoading ? "thinking" : mascotState}
+            size="medium"
+            showSpeechBubble={isLoading}
+            speechText={isLoading ? "Beep boop! Evole is thinking..." : ""}
+          />
+        </div>
+
+        <div className="max-w-4xl mx-auto">
+          {/* Skip to Products Button - Floating */}
+          <AnimatePresence>
+            {showSkipButton && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                transition={{ duration: 0.3 }}
+                className="fixed bottom-24 right-4 z-20"
+              >
+                <Button
+                  onClick={handleSkipToProducts}
+                  disabled={isLoading}
+                  className="gold-gradient text-charcoal border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <ShoppingBag className="w-4 h-4 mr-2" />
+                  Skip to Products
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Confirmation Dialog */}
+          <ConfirmDialog
+            isOpen={showRestartDialog}
+            onConfirm={confirmRestart}
+            onCancel={cancelRestart}
+            title="Are you sure you want to start over?"
+            message="Your current conversation will be lost and you'll return to the welcome screen."
+          />
+
+          {/* Conversation History - Chat Style */}
+          <div className="mb-12 max-w-4xl mx-auto">
+            <div className="space-y-6">
+              <AnimatePresence>
+                {messages
+                  .filter(
+                    (msg) =>
+                      msg.role !== "system" &&
+                      msg.content != currentQuestion?.content
+                  )
+                  .map((message, index) => (
+                    <motion.div
+                      key={`message-${index}-${message.content.slice(0, 20)}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      className={`flex ${
+                        message.role === "user"
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      {message.role === "user" ? (
+                        <div className="flex items-end space-x-2 max-w-[70%]">
+                          <div className="bg-gradient-to-r from-gold to-yellow-400 text-charcoal px-5 py-3 rounded-2xl rounded-br-md shadow-lg border border-gold/20">
+                            <p className="text-base font-medium leading-relaxed">
+                              {message.content}
+                            </p>
+                          </div>
+                          <div className="w-8 h-8 bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center shadow-md border border-gold/20">
+                            <span className="text-charcoal font-bold text-sm">
+                              U
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-end space-x-2 max-w-[70%]">
+                          <div className="bg-white border border-charcoal/20 px-5 py-3 rounded-2xl rounded-br-md shadow-lg backdrop-blur-sm">
+                            <p className="text-base text-charcoal leading-relaxed">
+                              {message.content}
+                            </p>
+                          </div>
+                          <div className="w-16 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white flex-shrink-0">
+                            <span className="text-white font-bold text-xs leading-none">
+                              Evol-e
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+
+            {/* Current Question - Chat Style */}
+            {currentQuestion && (
+              <motion.div
+                key="current-question"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-8"
+              >
+                {/* AI Question Message */}
+                <div className="flex justify-start mb-6">
+                  <div className="flex items-end space-x-2 max-w-[70%]">
+                    <div className="bg-white border border-charcoal/20 px-5 py-3 rounded-2xl rounded-br-md shadow-lg backdrop-blur-sm">
+                      <p className="text-lg font-medium text-charcoal leading-relaxed">
+                        {currentQuestion.content}
+                      </p>
+                    </div>
+                    <div className="w-16 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white flex-shrink-0">
+                      <span className="text-white font-bold text-xs leading-none">
+                        Evol-e
+                      </span>
+                    </div>
+                  </div>
+                  {/* Auto-play TTS for the current AI question text */}
+                  <div className="sr-only" aria-hidden>
+                    <TextToSpeechPlayer
+                      ref={ttsRef}
+                      text={currentQuestion.content}
+                      languageCode={languageCode}
+                    />
+                  </div>
+                </div>
+
+                {/* Options aligned with AI message */}
+                <div className="flex justify-start">
+                  <div className="flex flex-wrap gap-4 max-w-4xl">
+                    <AnimatePresence>
+                      {currentQuestion.options &&
+                        currentQuestion.options.map((option, index) => (
+                          <motion.div
+                            key={`option-${index}-${
+                              typeof option === "string"
+                                ? option
+                                : option.value || option.label
+                            }`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                              duration: 0.3,
+                              delay: 0.2 + index * 0.1,
+                            }}
+                          >
+                            <Card
+                              className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${
+                                isLoading || isRecording || isTranscribing
+                                  ? "opacity-50 pointer-events-none"
+                                  : ""
+                              }`}
+                              onClick={() => handleOptionSelect(option)}
+                            >
+                              <div className="text-center p-4">
+                                <h3 className="text-lg font-medium text-charcoal">
+                                  {typeof option === "string"
+                                    ? option
+                                    : option.label || option.value}
+                                </h3>
+                              </div>
+                            </Card>
+                          </motion.div>
+                        ))}
+                    </AnimatePresence>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Loading State */}
+            {isLoading && <Loader position="bottom" />}
+          </div>
+
+          {/* Floating Voice Recording Button - Right Bottom */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.6 }}
+            className="fixed bottom-6 right-6 z-50"
+          >
+            <div className="flex flex-col items-end space-y-3">
+              {!isRecording ? (
+                <div className="flex flex-col items-end space-y-2">
+                  <Button
+                    onClick={startRecording}
+                    disabled={isLoading || isTranscribing}
+                    className="bg-gradient-to-r from-gold to-yellow-400 text-charcoal border-2 border-gold/30 w-14 h-14 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center p-0"
+                  >
+                    <Mic className="w-6 h-6" />
+                  </Button>
+                  <div className="bg-white/95 backdrop-blur-md rounded-full px-3 py-1 shadow-lg border border-gold/20">
+                    <p className="text-xs text-charcoal/70 font-medium whitespace-nowrap">
+                      Voice
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-end space-y-3">
+                  <Button
+                    onClick={stopRecording}
+                    className="bg-red-500 hover:bg-red-600 text-white border-0 w-14 h-14 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center p-0"
+                  >
+                    <Square className="w-6 h-6" />
+                  </Button>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center space-x-2 bg-red-50/95 backdrop-blur-md px-3 py-2 rounded-full shadow-lg border border-red-200"
+                  >
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs text-red-600 font-bold">
+                      Recording...
+                    </span>
+                  </motion.div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+
+          <div ref={bottomRef} />
+        </div>
       </div>
     </div>
   );
