@@ -11,6 +11,7 @@ import { Loader } from "@/components/ui/loader";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { toast } from "sonner";
 import PropTypes from "prop-types";
+import { TextToSpeechPlayer } from "@/components/TextToSpeechPlayer";
 import {
   saveSessionData,
   getSessionData,
@@ -421,6 +422,10 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
                 <p className="text-2xl font-medium text-charcoal leading-relaxed">
                   {currentQuestion.content}
                 </p>
+                {/* Auto-play TTS for the current AI question text */}
+                <div className="sr-only" aria-hidden>
+                  <TextToSpeechPlayer text={currentQuestion.content} />
+                </div>
               </Card>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

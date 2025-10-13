@@ -8,7 +8,7 @@ const SPEECHIFY_API_ENDPOINT = "https://api.sws.speechify.com/v1/audio/speech";
  */
 export async function getSpeechForText(inputText) {
   try {
-    if (!inputText || typeof inputText !== "string") {
+    if (!inputText || !inputText.trim() || typeof inputText !== "string") {
       console.error("Invalid text input for speech generation");
       return { success: false };
     }
@@ -27,7 +27,7 @@ export async function getSpeechForText(inputText) {
         Authorization: `Bearer ${process.env.SPEECHIFY_API_KEY}`,
       },
       body: JSON.stringify({
-        input: trimmedText,
+        input: inputText,
         voice_id: "kristy",
         emotion: "energetic",
       }),
