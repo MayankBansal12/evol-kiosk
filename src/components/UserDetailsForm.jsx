@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { User } from "lucide-react";
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
@@ -17,7 +16,6 @@ import languages from "@/data/languages.json";
 
 const UserDetailsForm = ({ onNext, onBack }) => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [language, setLanguage] = useState("en");
 
   // Restore data from session if available
@@ -28,9 +26,6 @@ const UserDetailsForm = ({ onNext, onBack }) => {
       if (sessionData) {
         if (sessionData.userName) {
           setName(sessionData.userName);
-        }
-        if (sessionData.email) {
-          setEmail(sessionData.email);
         }
         if (sessionData.language) {
           setLanguage(sessionData.language);
@@ -47,7 +42,6 @@ const UserDetailsForm = ({ onNext, onBack }) => {
       if (sessionId) {
         saveSessionData(sessionId, {
           userName: name.trim(),
-          email: email.trim() || null,
           language: language,
           state: "userDetails",
         });
@@ -65,27 +59,34 @@ const UserDetailsForm = ({ onNext, onBack }) => {
         className="w-full max-w-md"
       >
         <Card className="premium-card luxury-shadow">
-          <div className="text-center mb-8">
+          <div className="text-center mb-10">
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="mx-auto w-16 h-16 bg-gold rounded-full flex items-center justify-center mb-6"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mb-8"
             >
-              <User className="w-8 h-8 text-charcoal" />
+              <img
+                src="/evol.jpg"
+                alt="EVOL Logo"
+                className="h-16 w-16 mx-auto border-2 border-gold rounded-full p-2 shadow-lg object-cover"
+              />
             </motion.div>
 
-            <h2 className="text-3xl font-light text-charcoal mb-2">
+            <h2 className="text-4xl font-light text-charcoal mb-3">
               Welcome to Evol Jewels
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               Let's personalize your experience
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-base font-medium">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-3">
+              <Label
+                htmlFor="name"
+                className="text-base font-medium text-charcoal"
+              >
                 Your Name
               </Label>
               <Input
@@ -93,21 +94,24 @@ const UserDetailsForm = ({ onNext, onBack }) => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="your name please..."
-                className="h-14 text-lg border-2 border-border/50 focus:border-gold"
+                placeholder="Enter your name..."
+                className="h-14 text-lg border-2 border-border/50 focus:border-gold transition-all duration-200"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="language" className="text-base font-medium">
-                Language
+            <div className="space-y-3">
+              <Label
+                htmlFor="language"
+                className="text-base font-medium text-charcoal"
+              >
+                Preferred Language
               </Label>
               <select
                 id="language"
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="h-14 text-lg border-2 border-border/50 focus:border-gold rounded-md px-3 w-full bg-white"
+                className="h-14 text-lg border-2 border-border/50 focus:border-gold rounded-md px-3 w-full bg-white transition-all duration-200"
               >
                 {languages.map((lang) => (
                   <option key={lang.code} value={lang.code}>
@@ -117,25 +121,10 @@ const UserDetailsForm = ({ onNext, onBack }) => {
               </select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-base font-medium">
-                Email Address{" "}
-                <span className="text-muted-foreground">(Optional)</span>
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email (optional)"
-                className="h-14 text-lg border-2 border-border/50 focus:border-gold"
-              />
-            </div>
-
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-4 pt-8">
               <Button
                 type="submit"
-                className="flex-1 kiosk-button gold-gradient text-charcoal border-0 h-12"
+                className="flex-1 kiosk-button gold-gradient text-charcoal border-0 h-14 text-lg font-medium transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 disabled={!name.trim()}
               >
                 Continue

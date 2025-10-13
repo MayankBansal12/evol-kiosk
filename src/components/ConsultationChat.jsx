@@ -9,17 +9,19 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Send, X, Bot } from "lucide-react";
 import { getProductChatResponse } from "@/app/actions/aiResponse";
+import { EvoleCharacter } from "@/components/EvoleCharacter";
 import PropTypes from "prop-types";
 
 const ConsultationChat = ({ product, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [mascotState, setMascotState] = useState("idle");
   const [messages, setMessages] = useState([
     {
       id: 1,
       role: "assistant",
-      content: `Hey there! 👋 I'm Evol-e, your jewelry buddy! This ${product.product_name} is pretty special - what's on your mind? ✨`,
+      content: `Beep boop! 👋 I'm Evol-e, your robot jewelry buddy! This ${product.product_name} is pretty special - what's on your mind? ✨`,
       timestamp: new Date(),
     },
   ]);
@@ -34,6 +36,7 @@ const ConsultationChat = ({ product, children }) => {
     e.preventDefault();
     if (!message.trim() || isLoading) return;
 
+    setMascotState("listening");
     // Add user message
     const userMessage = {
       id: Date.now(),
@@ -52,6 +55,7 @@ const ConsultationChat = ({ product, children }) => {
       const response = await getProductChatResponse(updatedMessages, product);
 
       if (response.success) {
+        setMascotState("talking");
         const aiResponse = {
           id: Date.now() + 1,
           role: "assistant",
@@ -82,6 +86,7 @@ const ConsultationChat = ({ product, children }) => {
       setMessages((prev) => [...prev, errorResponse]);
     } finally {
       setIsLoading(false);
+      setMascotState("idle");
     }
   };
 
@@ -116,9 +121,14 @@ const ConsultationChat = ({ product, children }) => {
               {/* Header */}
               <div className="flex items-center justify-between p-4 border-b">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gold rounded-full flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-charcoal" />
-                  </div>
+                  <EvoleCharacter
+                    state={isLoading ? "thinking" : mascotState}
+                    size="small"
+                    showSpeechBubble={isLoading}
+                    speechText={
+                      isLoading ? "Beep boop! Evole is thinking..." : ""
+                    }
+                  />
                   <div>
                     <h3 className="font-medium text-charcoal">
                       Evol-e Assistant
@@ -190,7 +200,7 @@ const ConsultationChat = ({ product, children }) => {
                           <div className="w-2 h-2 rounded-full bg-gold animate-bounce"></div>
                         </div>
                         <span className="text-sm text-muted-foreground">
-                          Evol-e is typing...
+                          Beep boop! Evole is processing...
                         </span>
                       </div>
                     </Card>
@@ -208,7 +218,7 @@ const ConsultationChat = ({ product, children }) => {
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={
                       isLoading
-                        ? "Evol-e is responding..."
+                        ? "Beep boop! Evole is responding..."
                         : "Ask about materials, styling, or care..."
                     }
                     className="flex-1"
