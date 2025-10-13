@@ -22,7 +22,7 @@ import {
   clearCurrentSession,
 } from "@/lib/sessionManager";
 
-const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
+const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTimeout, onBack }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -61,7 +61,7 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
           const initialMessages = [];
 
           // Get AI response for the first question
-          const response = await getAIResponse(initialMessages, userName);
+          const response = await getAIResponse(initialMessages, userName, languageCode);
           if (response.success) {
             const aiMessage = {
               role: "assistant",
@@ -83,7 +83,7 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
           // Kick off TTS immediately for low latency
           try {
             if (response?.data?.content) {
-              ttsRef.current?.playText(response.data.content);
+              ttsRef.current?.playText(response.data.content, languageCode);
             }
           } catch (e) {
             // no-op
@@ -230,7 +230,7 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
       setMessages(updatedMessages);
       setCurrentQuestion(null);
 
-      const response = await getAIResponse(updatedMessages);
+      const response = await getAIResponse(updatedMessages, userName, languageCode);
       if (response.success) {
         const aiMessage = {
           role: "assistant",
@@ -254,7 +254,7 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
           const forceProductsResponse = await getAIResponse([
             ...newMessages,
             { role: "user", content: "Please show me jewelry products now" },
-          ]);
+          ], userName, languageCode);
 
           if (
             forceProductsResponse.success &&
@@ -295,7 +295,7 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
       setMessages(updatedMessages);
       setCurrentQuestion(null);
 
-      const response = await getAIResponse(updatedMessages);
+      const response = await getAIResponse(updatedMessages, userName, languageCode);
       if (response.success) {
         const aiMessage = {
           role: "assistant",
@@ -310,7 +310,7 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
           // Kick off TTS immediately for low latency
           try {
             if (response?.data?.content) {
-              ttsRef.current?.playText(response.data.content);
+              ttsRef.current?.playText(response.data.content, languageCode);
             }
           } catch (e) {
             // no-op
@@ -441,7 +441,7 @@ const ConversationalWizard = ({ userName, onComplete, onTimeout, onBack }) => {
                 </p>
                 {/* Auto-play TTS for the current AI question text */}
                 <div className="sr-only" aria-hidden>
-                  <TextToSpeechPlayer ref={ttsRef} text={currentQuestion.content} />
+                  <TextToSpeechPlayer ref={ttsRef} text={currentQuestion.content} languageCode={languageCode} />
                 </div>
               </Card>
 

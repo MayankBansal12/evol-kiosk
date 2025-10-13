@@ -6,7 +6,7 @@ const SPEECHIFY_API_ENDPOINT = "https://api.sws.speechify.com/v1/audio/speech";
  * Generates speech audio data from text using the Speechify API
  * This is a server-side only function
  */
-export async function getSpeechForText(inputText) {
+export async function getSpeechForText(inputText, languageCode = "en") {
   try {
     if (!inputText || !inputText.trim() || typeof inputText !== "string") {
       console.error("Invalid text input for speech generation");
@@ -28,8 +28,10 @@ export async function getSpeechForText(inputText) {
       },
       body: JSON.stringify({
         input: inputText,
-        voice_id: "kristy",
+        // voice_id: "kristy",
         emotion: "energetic",
+        target_language: languageCode,
+        speed: 1.5,
       }),
     });
 

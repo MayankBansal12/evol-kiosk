@@ -7,7 +7,7 @@ import { JEWELLERY_STYLIST_PROMPT } from "./prompts";
 /**
  * Server action to get product-specific chat response
  */
-export async function getProductChatResponse(messages, product) {
+export async function getProductChatResponse(messages, product, languageCode = "en") {
   try {
     const USE_MOCK_DATA =
       process.env.USE_MOCK_DATA === "true" || !process.env.GEMINI_API_KEY;
@@ -15,7 +15,7 @@ export async function getProductChatResponse(messages, product) {
     if (!USE_MOCK_DATA) {
       console.log("Calling Gemini API for product consultation");
 
-      const apiResponse = await callProductGeminiAPI(messages, product);
+      const apiResponse = await callProductGeminiAPI(messages, product, languageCode);
       return { success: true, data: apiResponse };
     }
 
@@ -42,7 +42,7 @@ export async function getProductChatResponse(messages, product) {
 /**
  * Server action to interact with survey form
  */
-export async function getAIResponse(messages, userName) {
+export async function getAIResponse(messages, userName, languageCode = "en") {
   try {
     const USE_MOCK_DATA =
       process.env.USE_MOCK_DATA === "true" || !process.env.GEMINI_API_KEY;
@@ -50,7 +50,7 @@ export async function getAIResponse(messages, userName) {
     if (!USE_MOCK_DATA) {
       console.log("Calling Gemini API with conversation context");
 
-      const apiResponse = await callGeminiAPI(messages, userName);
+      const apiResponse = await callGeminiAPI(messages, userName, languageCode);
       return { success: true, data: apiResponse };
     }
 
@@ -73,7 +73,7 @@ export async function getAIResponse(messages, userName) {
 /**
  * Implementation of the Gemini API integration for product consultation
  */
-async function callProductGeminiAPI(messages, product) {
+async function callProductGeminiAPI(messages, product, languageCode) {
   const apiEndpoint =
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent";
 
@@ -105,7 +105,7 @@ Product Details:
           role: "user",
           parts: [
             {
-              text: `You are Evol-e, a witty and charming jewelry consultant. Keep responses SHORT, LIGHTWEIGHT, and HUMAN-LIKE (max 2-3 sentences). Be helpful, funny, and conversational. Use emojis occasionally. Make customers feel like they're chatting with a knowledgeable friend, not a robot. Focus on the specific question asked.
+              text: `You are Evol-e, a witty and charming jewelry consultant. Keep responses SHORT, LIGHTWEIGHT, and HUMAN-LIKE (max 2-3 sentences). Be helpful, funny, and conversational. Use emojis occasionally. Make customers feel like they're chatting with a knowledgeable friend, not a robot. Focus on the specific question asked. Always reply in the user's selected language: ${languageCode}. If you output options, also translate them.
 
 ${productContext}
 
@@ -136,7 +136,7 @@ ${JSON.stringify(messages)}`,
 /**
  * Implementation of the Gemini API integration using the 2.5 Flash Lite model
  */
-async function callGeminiAPI(messages, userName) {
+async function callGeminiAPI(messages, userName, languageCode) {
   const apiEndpoint =
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent";
 
@@ -157,7 +157,7 @@ async function callGeminiAPI(messages, userName) {
           parts: [
             {
               text:
-                `I am ${userName}. \n\n Conversation context till now:\n` +
+                `I am ${userName}. Please respond strictly in language code ${languageCode}. If the output includes options, they must also be in ${languageCode}.\n\n Conversation context till now:\n` +
                 JSON.stringify(messages),
             },
           ],
