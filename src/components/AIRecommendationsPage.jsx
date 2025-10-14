@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
+import { formatPrice } from "@/lib/productHelpers";
 
 const AIRecommendationsPage = ({ surveyData, onRestart }) => {
   const [products, setProducts] = useState([]);
@@ -140,7 +141,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
             className="gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] px-6 py-3 rounded-full font-medium text-base"
           >
             <Home className="w-5 h-5 mr-2" />
-            Home
+            Back to Home
           </Button>
         </motion.div>
 
@@ -198,7 +199,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                     <div className="absolute top-2 right-2">
                       <Badge
                         className={`text-xs font-medium border ${getMatchScoreColor(
-                          product.matchPercentage
+                          product.matchPercentage,
                         )}`}
                       >
                         {product.matchPercentage}% match
@@ -223,9 +224,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                   </p>
                   <div className="flex items-center justify-between mt-auto">
                     <span className="text-2xl font-light text-charcoal">
-                      {typeof product.price === "number"
-                        ? `$${product.price.toLocaleString()}`
-                        : product.price}
+                      {formatPrice(product.price)}
                     </span>
                     <Button
                       size="sm"
@@ -277,7 +276,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                   >
                     {page}
                   </Button>
-                )
+                ),
               )}
             </div>
 

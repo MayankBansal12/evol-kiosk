@@ -20,13 +20,13 @@ export function findProductById(id) {
 export function filterProductsByAIResponse(
   category = null,
   aiTags = [],
-  aiMetadata = {}
+  aiMetadata = {},
 ) {
   // Step 1: Filter by category FIRST (highest priority)
   let categoryFiltered = productData;
   if (category) {
     categoryFiltered = productData.filter(
-      (product) => product.category.toLowerCase() === category.toLowerCase()
+      (product) => product.category.toLowerCase() === category.toLowerCase(),
     );
 
     // If no products match the category, log warning but continue
@@ -50,7 +50,7 @@ export function filterProductsByAIResponse(
       aiTags,
       product.tags,
       product.metadata,
-      aiMetadata
+      aiMetadata,
     );
     return {
       ...product,
@@ -79,7 +79,7 @@ export function calculateMatch(
   userTags = [],
   productTags = [],
   productMetadata = {},
-  userMetadata = {}
+  userMetadata = {},
 ) {
   if (!userTags.length && !Object.keys(userMetadata).length) {
     return {
@@ -95,8 +95,8 @@ export function calculateMatch(
     productTags.some(
       (productTag) =>
         productTag.toLowerCase().includes(tag.toLowerCase()) ||
-        tag.toLowerCase().includes(productTag.toLowerCase())
-    )
+        tag.toLowerCase().includes(productTag.toLowerCase()),
+    ),
   );
 
   // Calculate metadata matches
@@ -113,7 +113,7 @@ export function calculateMatch(
       if (typeof val === "number") return val.toString();
       if (Array.isArray(val))
         return val.map((v) =>
-          typeof v === "string" ? v.toLowerCase() : v.toString()
+          typeof v === "string" ? v.toLowerCase() : v.toString(),
         );
       return val ? val.toString().toLowerCase() : "";
     };
@@ -125,8 +125,8 @@ export function calculateMatch(
 
       const overlap = userStrings.filter((userVal) =>
         productStrings.some(
-          (prodVal) => prodVal.includes(userVal) || userVal.includes(prodVal)
-        )
+          (prodVal) => prodVal.includes(userVal) || userVal.includes(prodVal),
+        ),
       );
       if (overlap.length > 0) {
         metadataMatches.push(`${key}: ${overlap.join(", ")}`);
@@ -139,7 +139,7 @@ export function calculateMatch(
       if (
         userStrings.some(
           (userVal) =>
-            productString.includes(userVal) || userVal.includes(productString)
+            productString.includes(userVal) || userVal.includes(productString),
         )
       ) {
         metadataMatches.push(`${key}: ${productValue}`);
@@ -152,7 +152,7 @@ export function calculateMatch(
       if (
         productStrings.some(
           (prodVal) =>
-            prodVal.includes(userString) || userString.includes(prodVal)
+            prodVal.includes(userString) || userString.includes(prodVal),
         )
       ) {
         metadataMatches.push(`${key}: ${userValues}`);
@@ -188,8 +188,8 @@ export function calculateMatch(
       !userTags.some(
         (userTag) =>
           tag.toLowerCase().includes(userTag.toLowerCase()) ||
-          userTag.toLowerCase().includes(tag.toLowerCase())
-      )
+          userTag.toLowerCase().includes(tag.toLowerCase()),
+      ),
   );
 
   return {
@@ -230,9 +230,9 @@ export function parseUrlTags(searchParams) {
  * @returns {string} Formatted price string
  */
 export function formatPrice(price) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(price);
