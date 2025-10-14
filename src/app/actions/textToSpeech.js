@@ -31,8 +31,7 @@ export async function getSpeechForText(inputText, languageCode = "en") {
         voice_id: "kristy",
         emotion: "energetic",
         target_language: languageCode,
-        speed: 2.5,
-        pitch: 1.2,
+        speed: 1.5,
       }),
     });
 
