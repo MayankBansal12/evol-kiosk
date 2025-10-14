@@ -6,14 +6,18 @@ const WelcomeScreen = ({ onStart }) => {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden hero-gradient">
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/hero-jewelry.jpg"
-          alt="Elegant jewelry collection"
-          className="w-full h-full object-cover opacity-20"
-          width={100}
-          height={100}
-          priority
-        />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover opacity-100"
+        >
+          <source
+            src="https://cdn.shopify.com/videos/c/o/v/23b550b7f86d4ac7b812b44b9824d6d6.mp4"
+            type="video/mp4"
+          />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-br from-warm-white/90 via-pearl/80 to-warm-white/90" />
       </div>
 
@@ -30,7 +34,7 @@ const WelcomeScreen = ({ onStart }) => {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             className="mx-auto w-20 h-20  rounded-full flex items-center justify-center mb-8 luxury-shadow"
           >
-            <span className="text-8xl">💍</span>
+            <span className="text-8xl">✨</span>
           </motion.div>
 
           <h1 className="text-6xl md:text-8xl font-light text-charcoal mb-6 tracking-tight">

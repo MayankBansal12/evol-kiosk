@@ -36,8 +36,8 @@ const UserDetailsForm = ({ onNext, onBack }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Use name if provided, otherwise default to "Guest"
-    const userName = name.trim() || "Guest";
+    // Use name if provided, otherwise use empty string for generic greetings
+    const userName = name.trim() || "";
 
     // Save to session
     const sessionId = getCurrentSessionId();
@@ -52,14 +52,14 @@ const UserDetailsForm = ({ onNext, onBack }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center hero-gradient px-4">
+    <div className="min-h-screen flex bg-[url('https://evoljewels.com/cdn/shop/products/SNEC340237-RG-PV.jpg?v=1755327577&width=1100')] items-center justify-center hero-gradient px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="w-full max-w-md"
       >
-        <Card className="premium-card luxury-shadow">
+        <Card className="premium-card luxury-shadow ">
           <div className="text-center mb-10">
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
@@ -86,7 +86,7 @@ const UserDetailsForm = ({ onNext, onBack }) => {
             <div className="space-y-3">
               <Label
                 htmlFor="name"
-                className="text-base font-medium text-charcoal"
+                className="text-lg font-medium text-charcoal"
               >
                 Your Name
               </Label>
@@ -95,8 +95,8 @@ const UserDetailsForm = ({ onNext, onBack }) => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name (optional)..."
-                className="h-14 text-lg border-2 border-border/50 focus:border-gold transition-all duration-200"
+                placeholder="Enter your name (optional) or leave blank for generic greetings..."
+                className="h-14 text-lg bg-white border-2 border-border/50 focus:border-gold transition-all duration-200"
               />
             </div>
 

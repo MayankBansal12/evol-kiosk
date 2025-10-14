@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loader } from "@/components/ui/loader";
+import { ConversationalWizardShimmer } from "@/components/ui/shimmer";
 import {
   clearCurrentSession,
   getCurrentSessionId,
@@ -30,6 +31,7 @@ const ConversationalWizard = ({
   onTimeout,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [showRestartDialog, setShowRestartDialog] = useState(false);
@@ -68,6 +70,7 @@ const ConversationalWizard = ({
           // Restore conversation from session
           setMessages(sessionData.messages);
           setCurrentQuestion(sessionData.currentQuestion);
+          setIsInitialLoading(false);
           toast.success("Conversation restored from previous session", {
             duration: 2000,
           });
@@ -90,6 +93,7 @@ const ConversationalWizard = ({
             const updatedMessages = [...initialMessages, aiMessage];
             setCurrentQuestion(response.data);
             setMessages(updatedMessages);
+            setIsInitialLoading(false);
 
             // Save initial state
             saveSessionData(sessionId, {
@@ -113,6 +117,7 @@ const ConversationalWizard = ({
         startInactivityTimer();
       } catch (error) {
         console.error("Error initializing conversation:", error);
+        setIsInitialLoading(false);
       } finally {
         setIsLoading(false);
       }
@@ -529,6 +534,11 @@ const ConversationalWizard = ({
     }
   };
 
+  // Show shimmer during initial loading
+  if (isInitialLoading) {
+    return <ConversationalWizardShimmer />;
+  }
+
   return (
     <div className="min-h-screen hero-gradient px-4 py-8 pb-12">
       <div className="max-w-4xl mx-auto">
@@ -607,7 +617,7 @@ const ConversationalWizard = ({
                       </Card>
                       <Avatar className="w-8 h-8 bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center shadow-md border border-gold/20">
                         <AvatarFallback>
-                          {userName?.charAt(0) || "U"}
+                          {userName?.charAt(0) || "👤"}
                         </AvatarFallback>
                       </Avatar>
                     </div>
