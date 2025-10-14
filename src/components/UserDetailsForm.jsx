@@ -110,7 +110,9 @@ const UserDetailsForm = ({ onNext, onBack }) => {
               <select
                 id="language"
                 value={language}
-                onChange={(e) => setLanguage(e.target.value)}
+                onChange={(e) => {
+                  setLanguage(e.target.value);
+                }}
                 className="h-14 text-lg border-2 border-border/50 focus:border-gold rounded-md px-3 w-full bg-white transition-all duration-200"
               >
                 {languages.map((lang) => (

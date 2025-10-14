@@ -17,12 +17,7 @@ import {
   saveSessionData,
   updateLastActivity,
 } from "@/lib/sessionManager";
-import {
-  Mic,
-  RotateCcw,
-  ShoppingBag,
-  Square
-} from "lucide-react";
+import { Mic, RotateCcw, ShoppingBag, Square } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
@@ -596,8 +591,9 @@ const ConversationalWizard = ({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className={`mb-6 ${message.role === "user" ? "text-right" : "text-left"
-                    }`}
+                  className={`mb-6 ${
+                    message.role === "user" ? "text-right" : "text-left"
+                  }`}
                 >
                   {message.role === "user" ? (
                     <div className="w-full flex items-end gap-3 justify-end">
@@ -616,7 +612,9 @@ const ConversationalWizard = ({
                         Evol-e
                       </Avatar>
                       <Card className="inline-block premium-card max-w-[85%] p-4 luxury-shadow">
-                        <p className="text-lg text-charcoal">{message.content}</p>
+                        <p className="text-lg text-charcoal">
+                          {message.content}
+                        </p>
                       </Card>
                     </div>
                   )}
@@ -653,19 +651,21 @@ const ConversationalWizard = ({
                   {currentQuestion.options &&
                     currentQuestion.options.map((option, index) => (
                       <motion.div
-                        key={`option-${index}-${typeof option === "string"
-                          ? option
-                          : option.value || option.label
-                          }`}
+                        key={`option-${index}-${
+                          typeof option === "string"
+                            ? option
+                            : option.value || option.label
+                        }`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
                       >
                         <Card
-                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${isLoading || isRecording || isTranscribing
-                            ? "opacity-50 pointer-events-none"
-                            : ""
-                            }`}
+                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${
+                            isLoading || isRecording || isTranscribing
+                              ? "opacity-50 pointer-events-none"
+                              : ""
+                          }`}
                           onClick={() => handleOptionSelect(option)}
                         >
                           <div className="text-center p-4">

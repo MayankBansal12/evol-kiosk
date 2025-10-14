@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import { getSpeechForText } from "@/app/actions/textToSpeech";
 
 /**
@@ -9,7 +15,10 @@ import { getSpeechForText } from "@/app/actions/textToSpeech";
  * - Keeps audio playback separate from AI response text
  * - Converts base64 audio data to Blob URL and handles cleanup
  */
-const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, languageCode = "en", disabled }, ref) {
+const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer(
+  { text, languageCode = "en", disabled },
+  ref,
+) {
   const audioRef = useRef(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -31,7 +40,11 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
     const cachedUrl = cacheRef.current.get(inputText);
     if (cachedUrl) {
       setAudioUrl((prev) => {
-        if (prev && prev !== cachedUrl && ![...cacheRef.current.values()].includes(prev)) {
+        if (
+          prev &&
+          prev !== cachedUrl &&
+          ![...cacheRef.current.values()].includes(prev)
+        ) {
           URL.revokeObjectURL(prev);
         }
         return cachedUrl;
@@ -51,7 +64,10 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
 
     setIsGenerating(true);
     try {
-      const result = await getSpeechForText(inputText, langCode || languageCode);
+      const result = await getSpeechForText(
+        inputText,
+        langCode || languageCode,
+      );
       if (requestId !== lastRequestIdRef.current) return; // stale
       if (!result?.success || !result.audio_data) return;
 
@@ -64,7 +80,8 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
       const byteArray = new Uint8Array(byteNumbers);
 
       // Create Blob and object URL
-      const mimeType = result.audio_format === "mp3" ? "audio/mpeg" : "audio/wav";
+      const mimeType =
+        result.audio_format === "mp3" ? "audio/mpeg" : "audio/wav";
       const blob = new Blob([byteArray], { type: mimeType });
       const url = URL.createObjectURL(blob);
 
@@ -73,7 +90,11 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
 
       // Swap URL and autoplay
       setAudioUrl((prev) => {
-        if (prev && prev !== url && ![...cacheRef.current.values()].includes(prev)) {
+        if (
+          prev &&
+          prev !== url &&
+          ![...cacheRef.current.values()].includes(prev)
+        ) {
           URL.revokeObjectURL(prev);
         }
         return url;
@@ -113,6 +134,3 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer({ text, langua
 });
 
 export { TextToSpeechPlayer };
-
-
-

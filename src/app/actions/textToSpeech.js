@@ -1,5 +1,6 @@
 "use server";
 
+import languageData from "@/data/languages.json";
 const SPEECHIFY_API_ENDPOINT = "https://api.sws.speechify.com/v1/audio/speech";
 
 /**
@@ -7,6 +8,7 @@ const SPEECHIFY_API_ENDPOINT = "https://api.sws.speechify.com/v1/audio/speech";
  * This is a server-side only function
  */
 export async function getSpeechForText(inputText, languageCode = "en") {
+  const currentLan = languageData.find((lan) => lan.code === languageCode);
   try {
     if (!inputText || !inputText.trim() || typeof inputText !== "string") {
       console.error("Invalid text input for speech generation");
@@ -20,6 +22,13 @@ export async function getSpeechForText(inputText, languageCode = "en") {
       return { success: false, reason: "TTS is not enabled" };
     }
 
+    console.log(
+      " current lan voiee id: ",
+      currentLan,
+      " languageCode: ",
+      languageCode,
+    );
+
     const response = await fetch(SPEECHIFY_API_ENDPOINT, {
       method: "POST",
       headers: {
@@ -28,7 +37,7 @@ export async function getSpeechForText(inputText, languageCode = "en") {
       },
       body: JSON.stringify({
         input: inputText,
-        voice_id: "kristy",
+        voice_id: currentLan.voice_id ?? "kristy",
         emotion: "energetic",
         target_language: languageCode,
         speed: 1.5,
@@ -42,6 +51,7 @@ export async function getSpeechForText(inputText, languageCode = "en") {
     }
 
     const result = await response.json();
+    console.log("result : ", result);
 
     if (!result.audio_data) {
       console.error("No audio data returned from API");
