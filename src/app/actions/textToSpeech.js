@@ -1,10 +1,9 @@
 "use server";
 
 import languageData from "@/data/languages.json";
-const SPEECHIFY_API_ENDPOINT = "https://api.sws.speechify.com/v1/audio/speech";
 
 /**
- * Generates speech audio data from text using the Speechify API
+ * Generates speech audio data from text using the ElevenLabs API
  * This is a server-side only function
  */
 export async function getSpeechForText(inputText, languageCode = "en") {
@@ -17,46 +16,59 @@ export async function getSpeechForText(inputText, languageCode = "en") {
 
     if (
       process.env.USE_MOCK_DATA === "true" ||
-      !process.env.SPEECHIFY_API_KEY
+      !process.env.ELEVEN_LABS_API_KEY
     ) {
       return { success: false, reason: "TTS is not enabled" };
     }
 
-    const response = await fetch(SPEECHIFY_API_ENDPOINT, {
+    console.log(
+      "Generating speech for language:",
+      languageCode,
+      "using voice_id:",
+      currentLan.voice_id
+    );
+
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${currentLan.voice_id}`, {
       method: "POST",
       headers: {
+        "Accept": "audio/mpeg",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.SPEECHIFY_API_KEY}`,
+        "xi-api-key": `${process.env.ELEVEN_LABS_API_KEY}`,
       },
       body: JSON.stringify({
-        input: inputText,
-        voice_id: currentLan.voice_id ?? "kristy",
-        emotion: "energetic",
-        target_language: languageCode,
-        speed: 1.5,
-        pitch: 1.2,
+        text: inputText,
+        model_id: "eleven_multilingual_v2",
+        voice_settings: {
+          stability: 0.5,
+          similarity_boost: 0.5
+        }
       }),
     });
 
     if (!response.ok) {
-      console.error("Speechify API error:", response.status);
+      console.error("ElevenLabs API error:", response.status, response.statusText);
+      return { success: false, reason: `API error: ${response.status}` };
+    }
+
+    // ElevenLabs returns binary audio data, not JSON
+    const audioBuffer = await response.arrayBuffer();
+    
+    if (!audioBuffer || audioBuffer.byteLength === 0) {
+      console.error("No audio data returned from ElevenLabs API");
       return { success: false };
     }
 
-    const result = await response.json();
-
-    if (!result.audio_data) {
-      console.error("No audio data returned from API");
-      return { success: false };
-    }
+    // Convert ArrayBuffer to base64 string for client-side consumption
+    const uint8Array = new Uint8Array(audioBuffer);
+    const base64String = btoa(String.fromCharCode(...uint8Array));
 
     return {
       success: true,
-      audio_data: result.audio_data,
-      audio_format: result.audio_format || "wav",
+      audio_data: base64String,
+      audio_format: "mp3",
     };
   } catch (error) {
     console.error("Error generating speech:", error);
-    return { success: false };
+    return { success: false, reason: error.message };
   }
 }
