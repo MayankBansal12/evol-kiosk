@@ -2,146 +2,141 @@
   {
     "value": "Arabic",
     "code": "ar",
-    "voice_id": "aicha"
+    "voice_id": "qi4PkV9c01kb869Vh7Su"
   },
   {
     "value": "Bengali",
     "code": "bn",
-    "voice_id": "anwesha"
+    "voice_id": "WiaIVvI1gDL4vT4y7qUU"
   },
   {
     "value": "Bhojpuri",
     "code": "bho",
-    "voice_id": "navit"
+    "voice_id": "3Th96YoTP1kEKxJroYo1"
   },
   {
     "value": "Chinese (Simplified)",
     "code": "zh-CN",
-    "voice_id": "yan-ting"
+    "voice_id": "4VZIsMPtgggwNg7OXbPY"
   },
   {
     "value": "Chinese (Traditional)",
     "code": "zh-TW",
-    "voice_id": "hiu-ching"
+    "voice_id": "4VZIsMPtgggwNg7OXbPY"
   },
   {
     "value": "Danish",
     "code": "da",
-    "voice_id": "freja"
+    "voice_id": "6SjhOkgKPuHxm8q0eIyp"
   },
   {
     "value": "Dutch",
     "code": "nl",
-    "voice_id": "daan"
+    "voice_id": "tvFp0BgJPrEXGoDhDIA4"
   },
   {
     "value": "English",
     "code": "en",
-    "voice_id": "kristy"
+    "voice_id": "2zRM7PkgwBPiau2jvVXc"
   },
   {
     "value": "French",
     "code": "fr",
-    "voice_id": "camille"
+    "voice_id": "AfbuxQ9DVtS4azaxN1W7"
   },
   {
     "value": "German",
     "code": "de",
-    "voice_id": "frederick"
+    "voice_id": "v3V1d2rk6528UrLKRuy8"
   },
   {
     "value": "Greek",
     "code": "el",
-    "voice_id": "kostas"
+    "voice_id": "AnNshXL08po8KEaf53gz"
   },
   {
     "value": "Gujarati",
     "code": "gu",
-    "voice_id": "kinjal"
+    "voice_id": "nlRBcodAo9LA6ChkhS0i"
   },
   {
     "value": "Hindi",
     "code": "hi",
-    "voice_id": "priya"
+    "voice_id": "1qEiC6qsybMkmnNdVMbK"
   },
   {
     "value": "Italian",
     "code": "it",
-    "voice_id": "lazzaro"
+    "voice_id": "13Cuh3NuYvWOVQtLbRN8"
   },
   {
     "value": "Japanese",
     "code": "ja",
-    "voice_id": "sakura"
+    "voice_id": "RBnMinrYKeccY3vaUxlZ"
   },
   {
     "value": "Korean",
     "code": "ko",
-    "voice_id": "eun-ji"
+    "voice_id": "uyVNoMrnUku1dZyVEXwD"
   },
   {
     "value": "Marathi",
     "code": "mr",
-    "voice_id": "sanket"
-  },
-  {
-    "value": "Nepali",
-    "code": "ne",
-    "voice_id": "rohan"
+    "voice_id": "VT26nWaqgBmXtH6KAeQ3"
   },
   {
     "value": "Polish",
     "code": "pl",
-    "voice_id": "dominika"
+    "voice_id": "W0sqKm1Sfw1EzlCH14FQ"
   },
   {
     "value": "Portuguese",
     "code": "pt",
-    "voice_id": "luiza"
+    "voice_id": "Wzy1ixch7Fh77aGCTLPe"
   },
   {
     "value": "Punjabi",
     "code": "pa",
-    "voice_id": "mihir"
+    "voice_id": "yco9hkSzXpAeaJXfPNpa"
   },
   {
     "value": "Russian",
     "code": "ru",
-    "voice_id": "olga"
+    "voice_id": "FnNYfPjyvZwLwb043Kl1"
   },
   {
     "value": "Spanish",
     "code": "es",
-    "voice_id": "carlos"
+    "voice_id": "hHjbwzYZW17oh0p05AKv"
   },
   {
     "value": "Swedish",
     "code": "sv",
-    "voice_id": "ebba"
+    "voice_id": "aSLKtNoVBZlxQEMsnGL2"
   },
   {
     "value": "Tamil",
     "code": "ta",
-    "voice_id": "nandhini"
+    "voice_id": "eh0hAHy3N3C9DE0uyHHD"
   },
   {
     "value": "Telugu",
     "code": "te",
-    "voice_id": "sreya"
+    "voice_id": "gqFUMFHCD2nbbcYVtPGB"
   },
   {
     "value": "Turkish",
     "code": "tr",
-    "voice_id": "yusuf"
+    "voice_id": "BQnJrtsrT9aT7kziS653"
   },
   {
     "value": "Urdu",
     "code": "ur",
-    "voice_id": "aaliya"
+    "voice_id": "9cI5mhBtM4WtQ9Fo6jWQ"
   },
   {
     "value": "Vietnamese",
     "code": "vi",
-    "voice_id": "thoa"
+    "voice_id": "Wzj3w9OuQFcoiuKPnk3j"
   }
 ]
