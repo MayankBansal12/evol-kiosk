@@ -7,19 +7,24 @@ import { JEWELLERY_STYLIST_PROMPT } from "./prompts";
 /**
  * Server action to get product-specific chat response
  */
-export async function getProductChatResponse(messages, product, languageCode = "en") {
+export async function getProductChatResponse(
+  messages,
+  product,
+  languageCode = "en"
+) {
   try {
     const USE_MOCK_DATA =
       process.env.USE_MOCK_DATA === "true" || !process.env.GEMINI_API_KEY;
 
     if (!USE_MOCK_DATA) {
-      console.log("Calling Gemini API for product consultation");
-
-      const apiResponse = await callProductGeminiAPI(messages, product, languageCode);
+      const apiResponse = await callProductGeminiAPI(
+        messages,
+        product,
+        languageCode
+      );
       return { success: true, data: apiResponse };
     }
 
-    console.log("Using mock data for product chat responses");
     // Mock response for product consultation - witty and human-like
     const mockResponse = {
       content:
@@ -48,13 +53,10 @@ export async function getAIResponse(messages, userName, languageCode = "en") {
       process.env.USE_MOCK_DATA === "true" || !process.env.GEMINI_API_KEY;
 
     if (!USE_MOCK_DATA) {
-      console.log("Calling Gemini API with conversation context");
-
       const apiResponse = await callGeminiAPI(messages, userName, languageCode);
       return { success: true, data: apiResponse };
     }
 
-    console.log("Using mock data for AI responses");
     const response = generateMockResponse(messages, userName);
 
     // Simulate delay for loading animation
@@ -185,7 +187,6 @@ function parseGeminiResponse(textResponse) {
     const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
-      console.log("json didn't match from AI response: ", textResponse);
       return {
         content:
           textResponse.split("\n")[0] ||

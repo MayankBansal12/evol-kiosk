@@ -117,7 +117,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
   };
 
   return (
-    <div className="min-h-screen hero-gradient px-4 py-8">
+    <div className="min-h-screen hero-gradient px-4 py-4">
       <div className="max-w-6xl mx-auto">
         {/* Top Navigation */}
         <motion.div
@@ -187,19 +187,37 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <Card className="premium-card overflow-hidden group hover:scale-105 transition-all duration-500 luxury-shadow h-full flex flex-col">
+              <Card
+                className="premium-card overflow-hidden group hover:scale-105 transition-all duration-500 luxury-shadow h-full flex flex-col cursor-pointer"
+                onClick={() => handleProductClick(product)}
+              >
                 <div className="aspect-square overflow-hidden bg-pearl relative flex-shrink-0">
                   <img
                     src={product.image_url || product.image}
                     alt={product.product_name || product.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
+                    }}
                   />
+                  <div
+                    className="w-full h-full flex items-center justify-center text-muted-foreground absolute inset-0"
+                    style={{ display: "none" }}
+                  >
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-3 flex items-center justify-center">
+                        <span className="text-2xl">💎</span>
+                      </div>
+                      <p className="text-xs font-medium">Jewelry Image</p>
+                    </div>
+                  </div>
                   {/* Match Score Badge */}
                   {product.matchPercentage && (
                     <div className="absolute top-2 right-2">
                       <Badge
                         className={`text-xs font-medium border ${getMatchScoreColor(
-                          product.matchPercentage,
+                          product.matchPercentage
                         )}`}
                       >
                         {product.matchPercentage}% match
@@ -226,14 +244,10 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                     <span className="text-2xl font-light text-charcoal">
                       {formatPrice(product.price)}
                     </span>
-                    <Button
-                      size="sm"
-                      className="gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] flex-shrink-0"
-                      onClick={() => handleProductClick(product)}
-                    >
-                      <ShoppingBag className="w-4 h-4 mr-2" />
-                      View More
-                    </Button>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <ShoppingBag className="w-4 h-4 mr-1" />
+                      Click to view
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -247,14 +261,14 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="flex justify-center items-center gap-4 mb-12"
+            className="flex justify-center items-center gap-4 py-4"
           >
             <Button
               variant="outline"
               size="sm"
               onClick={goToPreviousPage}
               disabled={currentPage === 1}
-              className="kiosk-button"
+              className="w-20 h-10"
             >
               <ChevronLeft className="w-4 h-4 mr-1" />
               Previous
@@ -268,7 +282,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                     variant={currentPage === page ? "default" : "outline"}
                     size="sm"
                     onClick={() => goToPage(page)}
-                    className={`kiosk-button w-12 h-4 p-0 flex items-center justify-center ${
+                    className={` w-10 h-10 p-0 flex items-center justify-center ${
                       currentPage === page
                         ? "gold-gradient text-charcoal border-0"
                         : ""
@@ -276,7 +290,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                   >
                     {page}
                   </Button>
-                ),
+                )
               )}
             </div>
 
@@ -285,7 +299,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
               size="sm"
               onClick={goToNextPage}
               disabled={currentPage === totalPages}
-              className="kiosk-button"
+              className=" w-20 h-10"
             >
               Next
               <ChevronRight className="w-4 h-4 ml-1" />
@@ -311,16 +325,14 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="text-center"
+          className="text-center mb-8"
         >
           <p className="text-muted-foreground mb-6">
             Not quite what you're looking for?
           </p>
           <Button
             onClick={() => {
-              // Clear ALL localStorage and session data
               localStorage.removeItem("surveyData");
-              // Also clear session if sessionManager is available
               try {
                 const { clearCurrentSession } = require("@/lib/sessionManager");
                 clearCurrentSession();
@@ -330,7 +342,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
               window.location.href = "/";
             }}
             variant="outline"
-            className="kiosk-button border-2 px-8"
+            className=" border-2 border-gold/30 bg-white/80 hover:bg-gold/10 hover:border-gold/50 px-8 py-3 text-base font-medium transition-all duration-300 hover:shadow-lg"
           >
             <RotateCcw className="w-5 h-5 mr-2" />
             Speak to Evol-e again
