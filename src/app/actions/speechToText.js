@@ -2,20 +2,16 @@
 
 const API_ENDPOINT_FOR_TRANSCRIPTION = "https://api.groq.com/openai/v1/audio/transcriptions"
 
-export async function speechToText(audioBase64Url) {
+export async function speechToText(audioBase64Url, languageCode) {
     try {
         if (!audioBase64Url) {
             return { success: false };
         }
 
-        // Convert base64 data URL to blob
-        const response = await fetch(audioBase64Url);
-        const audioBlob = await response.blob();
-
-        // Create form data for multipart upload
         const formData = new FormData();
-        formData.append('file', audioBlob, 'audio.webm');
-        formData.append('model', 'whisper-large-v3-turbo');
+        formData.append("url", audioBase64Url);
+        formData.append("model", "whisper-large-v3");
+        formData.append("language", languageCode ?? "en");
 
         const apiResponse = await fetch(API_ENDPOINT_FOR_TRANSCRIPTION, {
             method: "POST",
@@ -26,7 +22,8 @@ export async function speechToText(audioBase64Url) {
         });
 
         if (!apiResponse.ok) {
-            console.error("GROQ STT API error:", apiResponse.status);
+            const errorData = await apiResponse.json();
+            console.error("GROQ STT API error:", errorData);
             return { success: false };
         }
 

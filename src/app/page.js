@@ -65,11 +65,6 @@ export default function Home() {
     setCurrentState("welcome");
   };
 
-  const handleBackFromSurvey = () => {
-    // Go back to user details form, preserving session data
-    setCurrentState("userDetails");
-  };
-
   const pageVariants = {
     initial: { opacity: 0, x: 50 },
     in: { opacity: 1, x: 0 },
@@ -128,7 +123,6 @@ export default function Home() {
               languageCode={surveyData.language}
               onComplete={handleSurveyComplete}
               onTimeout={handleTimeout}
-              onBack={handleBackFromSurvey}
             />
           </motion.div>
         )}

@@ -1,41 +1,38 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  RotateCcw,
-  ShoppingBag,
-  ArrowLeft,
-  Mic,
-  MicOff,
-  Square,
-} from "lucide-react";
 import { getAIResponse } from "@/app/actions/aiResponse";
 import { speechToText } from "@/app/actions/speechToText";
-import { Loader } from "@/components/ui/loader";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
-import { toast } from "sonner";
-import PropTypes from "prop-types";
 import { TextToSpeechPlayer } from "@/components/TextToSpeechPlayer";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Loader } from "@/components/ui/loader";
 import {
-  saveSessionData,
-  getSessionData,
+  clearCurrentSession,
   getCurrentSessionId,
-  updateLastActivity,
+  getSessionData,
   getTimeUntilExpiry,
   isSessionAboutToExpire,
-  clearCurrentSession,
+  saveSessionData,
+  updateLastActivity,
 } from "@/lib/sessionManager";
+import {
+  Mic,
+  RotateCcw,
+  ShoppingBag,
+  Square
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import PropTypes from "prop-types";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 const ConversationalWizard = ({
   userName,
   languageCode = "en",
   onComplete,
   onTimeout,
-  onBack,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -444,7 +441,7 @@ const ConversationalWizard = ({
         const base64Url = `data:audio/webm;base64,${base64Audio.split(",")[1]}`;
 
         // Send to speech-to-text API
-        const result = await speechToText(base64Url);
+        const result = await speechToText(base64Url, languageCode);
 
         if (result.success && result.text) {
           // Use the transcribed text as user response
@@ -578,7 +575,7 @@ const ConversationalWizard = ({
         <Button
           onClick={handleRestart}
           variant="outline"
-          className="fixed right-10 top-10 gold-gradient text-charcoal border-2 px-10 py-4 hover:shadow-lg transition-all duration-300"
+          className="fixed right-10 top-8 gold-gradient text-charcoal border-2 px-10 py-4 hover:shadow-lg transition-all duration-300"
         >
           <RotateCcw className="w-5 h-5 mr-2" />
           Start again!
@@ -599,23 +596,29 @@ const ConversationalWizard = ({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className={`mb-6 ${
-                    message.role === "user" ? "text-right" : "text-left"
-                  }`}
+                  className={`mb-6 ${message.role === "user" ? "text-right" : "text-left"
+                    }`}
                 >
                   {message.role === "user" ? (
-                    <div className="flex justify-end">
-                      <Badge
-                        variant="secondary"
-                        className="inline-block py-2 px-4 text-base bg-secondary/80"
-                      >
+                    <div className="w-full flex items-end gap-3 justify-end">
+                      <Card className="inline-flex gold-gradient text-charcoal max-w-[50%] p-4 luxury-shadow">
                         {message.content}
-                      </Badge>
+                      </Card>
+                      <Avatar className="w-8 h-8 bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center shadow-md border border-gold/20">
+                        <AvatarFallback>
+                          {userName?.charAt(0) || "U"}
+                        </AvatarFallback>
+                      </Avatar>
                     </div>
                   ) : (
-                    <Card className="inline-block premium-card max-w-[85%] p-4 luxury-shadow">
-                      <p className="text-lg text-charcoal">{message.content}</p>
-                    </Card>
+                    <div className="flex items-end gap-3">
+                      <Avatar className="w-10 h-10 text-black/40 text-xs text-center bg-gold/20 rounded-sm flex justify-center items-center">
+                        Evol-e
+                      </Avatar>
+                      <Card className="inline-block premium-card max-w-[85%] p-4 luxury-shadow">
+                        <p className="text-lg text-charcoal">{message.content}</p>
+                      </Card>
+                    </div>
                   )}
                 </motion.div>
               ))}
@@ -650,21 +653,19 @@ const ConversationalWizard = ({
                   {currentQuestion.options &&
                     currentQuestion.options.map((option, index) => (
                       <motion.div
-                        key={`option-${index}-${
-                          typeof option === "string"
-                            ? option
-                            : option.value || option.label
-                        }`}
+                        key={`option-${index}-${typeof option === "string"
+                          ? option
+                          : option.value || option.label
+                          }`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
                       >
                         <Card
-                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${
-                            isLoading || isRecording || isTranscribing
-                              ? "opacity-50 pointer-events-none"
-                              : ""
-                          }`}
+                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${isLoading || isRecording || isTranscribing
+                            ? "opacity-50 pointer-events-none"
+                            : ""
+                            }`}
                           onClick={() => handleOptionSelect(option)}
                         >
                           <div className="text-center p-4">
@@ -741,7 +742,6 @@ ConversationalWizard.propTypes = {
   userName: PropTypes.string,
   onComplete: PropTypes.func.isRequired,
   onTimeout: PropTypes.func,
-  onBack: PropTypes.func,
 };
 
 export { ConversationalWizard };
