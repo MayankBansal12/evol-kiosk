@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import Image from "next/image";
-import { EvoleCharacter } from "@/components/EvoleCharacter";
 
 const WelcomeScreen = ({ onStart }) => {
   return (
@@ -30,15 +29,9 @@ const WelcomeScreen = ({ onStart }) => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            className="mx-auto mb-8 flex flex-col items-center"
+            className="mx-auto w-20 h-20 bg-gold rounded-full flex items-center justify-center mb-8 luxury-shadow"
           >
-            <EvoleCharacter
-              state="waving"
-              size="large"
-              showSpeechBubble={true}
-              speechText="Hi! I'm Evole, let's find your perfect jewelry! 🤖✨"
-              className="mb-4"
-            />
+            <Sparkles className="w-10 h-10 text-charcoal" />
           </motion.div>
 
           <h1 className="text-6xl md:text-8xl font-light text-charcoal mb-6 tracking-tight">
