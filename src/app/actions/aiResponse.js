@@ -159,7 +159,9 @@ async function callGeminiAPI(messages, userName, languageCode) {
           parts: [
             {
               text:
-                `I am ${userName}. Please respond strictly in language code ${languageCode}. If the output includes options, they must also be in ${languageCode}.\n\n Conversation context till now:\n` +
+                `${
+                  userName ? `I am ${userName}.` : "I am a customer."
+                } Please respond strictly in language code ${languageCode}. If the output includes options, they must also be in ${languageCode}.\n\n Conversation context till now:\n` +
                 JSON.stringify(messages),
             },
           ],

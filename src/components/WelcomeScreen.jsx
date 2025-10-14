@@ -34,7 +34,7 @@ const WelcomeScreen = ({ onStart }) => {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             className="mx-auto w-20 h-20  rounded-full flex items-center justify-center mb-8 luxury-shadow"
           >
-            <span className="text-8xl">💍</span>
+            <span className="text-8xl">✨</span>
           </motion.div>
 
           <h1 className="text-6xl md:text-8xl font-light text-charcoal mb-6 tracking-tight">

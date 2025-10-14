@@ -169,4 +169,153 @@ const ProductDetailsShimmer = () => {
   );
 };
 
-export { Shimmer, ProductDetailsShimmer };
+const ConversationalWizardShimmer = () => {
+  return (
+    <div className="min-h-screen hero-gradient px-4 py-8 pb-12">
+      <div className="max-w-4xl mx-auto">
+        {/* Header Shimmer */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <Shimmer variant="luxury" className="h-12 w-48 mx-auto rounded-lg" />
+        </motion.div>
+
+        {/* Restart Button Shimmer */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed right-10 top-8"
+        >
+          <Shimmer variant="gold" className="h-14 w-32 rounded-lg" />
+        </motion.div>
+
+        {/* Conversation Area Shimmer */}
+        <div className="my-12 max-w-2xl mx-auto">
+          {/* AI Message Shimmer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mb-6 text-left"
+          >
+            <div className="flex items-end gap-3">
+              <Shimmer variant="gold" className="w-10 h-10 rounded-sm" />
+              <div className="inline-block max-w-[85%]">
+                <Shimmer variant="pearl" className="h-20 w-80 rounded-lg p-4" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Current Question Shimmer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="my-12 flex flex-col items-center"
+          >
+            <div className="premium-card luxury-shadow mb-6 max-w-2xl w-full text-center">
+              <Shimmer variant="luxury" className="h-16 w-full rounded-lg" />
+            </div>
+
+            {/* Options Shimmer */}
+            <div className="w-[90%] grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Option 1 */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.4 }}
+              >
+                <div className="premium-card">
+                  <Shimmer variant="pearl" className="h-16 w-full rounded-lg" />
+                </div>
+              </motion.div>
+
+              {/* Option 2 */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.5 }}
+              >
+                <div className="premium-card">
+                  <Shimmer variant="pearl" className="h-16 w-full rounded-lg" />
+                </div>
+              </motion.div>
+
+              {/* Voice Recording Button Shimmer */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.6 }}
+              >
+                <div className="premium-card luxury-shadow">
+                  <div className="p-4 text-center">
+                    <Shimmer
+                      variant="default"
+                      className="h-4 w-32 mx-auto mb-3 rounded"
+                    />
+                    <Shimmer
+                      variant="gold"
+                      className="h-12 w-40 mx-auto rounded-lg"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Floating jewelry elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <motion.div
+            animate={{
+              y: [0, -20, 0],
+              rotate: [0, 5, 0],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute top-20 right-20 text-4xl opacity-20"
+          >
+            💎
+          </motion.div>
+          <motion.div
+            animate={{
+              y: [0, 15, 0],
+              rotate: [0, -3, 0],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+            className="absolute bottom-32 left-16 text-3xl opacity-15"
+          >
+            💍
+          </motion.div>
+          <motion.div
+            animate={{
+              y: [0, -10, 0],
+              x: [0, 10, 0],
+            }}
+            transition={{
+              duration: 2.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.5,
+            }}
+            className="absolute top-1/2 right-8 text-2xl opacity-10"
+          >
+            ✨
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export { Shimmer, ProductDetailsShimmer, ConversationalWizardShimmer };
