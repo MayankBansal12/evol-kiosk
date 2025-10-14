@@ -138,7 +138,7 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
               }
               window.location.href = "/";
             }}
-            className="gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] px-6 py-3 rounded-full font-medium text-base"
+            className="gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] px-6 py-3 font-medium text-base"
           >
             <Home className="w-5 h-5 mr-2" />
             Back to Home

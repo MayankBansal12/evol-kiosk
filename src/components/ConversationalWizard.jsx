@@ -574,6 +574,16 @@ const ConversationalWizard = ({
             <span className="font-medium">Evol-</span> e
           </h1>
         </motion.div>
+
+        <Button
+          onClick={handleRestart}
+          variant="outline"
+          className="fixed right-10 top-10 gold-gradient text-charcoal border-2 px-10 py-4 hover:shadow-lg transition-all duration-300"
+        >
+          <RotateCcw className="w-5 h-5 mr-2" />
+          Start again!
+        </Button>
+
         {/* Conversation History */}
         <div className="my-12 max-w-2xl mx-auto">
           <AnimatePresence>

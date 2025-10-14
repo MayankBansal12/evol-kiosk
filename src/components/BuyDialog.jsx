@@ -94,15 +94,15 @@ const BuyDialog = ({ isOpen, onClose, product }) => {
                     {paymentState === "success"
                       ? "Order Confirmed!"
                       : paymentState === "processing"
-                      ? "Processing Payment..."
-                      : "Confirm Your Selection"}
+                        ? "Processing Payment..."
+                        : "Confirm Your Selection"}
                   </h2>
                   <p className="text-sm text-charcoal/70 mt-2">
                     {paymentState === "success"
                       ? "Your order has been successfully placed!"
                       : paymentState === "processing"
-                      ? "Please wait while we process your payment"
-                      : "You're about to select this beautiful piece"}
+                        ? "Please wait while we process your payment"
+                        : "You're about to select this beautiful piece"}
                   </p>
                 </div>
 
