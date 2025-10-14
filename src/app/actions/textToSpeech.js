@@ -28,7 +28,7 @@ export async function getSpeechForText(inputText, languageCode = "en") {
       currentLan.voice_id
     );
 
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${currentLan.voice_id}`, {
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/2zRM7PkgwBPiau2jvVXc`, {
       method: "POST",
       headers: {
         "Accept": "audio/mpeg",
@@ -46,21 +46,28 @@ export async function getSpeechForText(inputText, languageCode = "en") {
     });
 
     if (!response.ok) {
-      console.error("ElevenLabs API error:", response.status, response.statusText);
+      const errorData = await response.json()
+      console.error("ElevenLabs API error:", response.status, errorData);
       return { success: false, reason: `API error: ${response.status}` };
     }
 
-    // ElevenLabs returns binary audio data, not JSON
     const audioBuffer = await response.arrayBuffer();
-    
+
     if (!audioBuffer || audioBuffer.byteLength === 0) {
       console.error("No audio data returned from ElevenLabs API");
       return { success: false };
     }
 
-    // Convert ArrayBuffer to base64 string for client-side consumption
     const uint8Array = new Uint8Array(audioBuffer);
-    const base64String = btoa(String.fromCharCode(...uint8Array));
+    let binaryString = '';
+    const chunkSize = 8192;
+    
+    for (let i = 0; i < uint8Array.length; i += chunkSize) {
+      const chunk = uint8Array.slice(i, i + chunkSize);
+      binaryString += String.fromCharCode.apply(null, chunk);
+    }
+    
+    const base64String = btoa(binaryString);
 
     return {
       success: true,
