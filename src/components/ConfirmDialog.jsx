@@ -43,17 +43,17 @@ const ConfirmDialog = ({ isOpen, onConfirm, onCancel, title, message }) => {
                 <p className="text-muted-foreground mb-6">{message}</p>
                 <div className="flex gap-3">
                   <Button
-                    onClick={onConfirm}
-                    className="flex-1 gold-gradient text-charcoal border-0"
-                  >
-                    Yes, Restart
-                  </Button>
-                  <Button
                     onClick={onCancel}
                     variant="outline"
                     className="flex-1"
                   >
                     Cancel
+                  </Button>
+                  <Button
+                    onClick={onConfirm}
+                    className="flex-1 gold-gradient text-charcoal border-0 hover:scale-105"
+                  >
+                    Yes, Restart
                   </Button>
                 </div>
               </div>

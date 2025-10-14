@@ -1,29 +1,39 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { RotateCcw, ShoppingBag, ArrowLeft, Mic, MicOff, Square } from "lucide-react";
 import { getAIResponse } from "@/app/actions/aiResponse";
 import { speechToText } from "@/app/actions/speechToText";
-import { Loader } from "@/components/ui/loader";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
-import { toast } from "sonner";
-import PropTypes from "prop-types";
 import { TextToSpeechPlayer } from "@/components/TextToSpeechPlayer";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Loader } from "@/components/ui/loader";
 import {
-  saveSessionData,
-  getSessionData,
+  clearCurrentSession,
   getCurrentSessionId,
-  updateLastActivity,
+  getSessionData,
   getTimeUntilExpiry,
   isSessionAboutToExpire,
-  clearCurrentSession,
+  saveSessionData,
+  updateLastActivity,
 } from "@/lib/sessionManager";
+import {
+  Mic,
+  RotateCcw,
+  ShoppingBag,
+  Square
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import PropTypes from "prop-types";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
-const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTimeout, onBack }) => {
+const ConversationalWizard = ({
+  userName,
+  languageCode = "en",
+  onComplete,
+  onTimeout,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -32,7 +42,7 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const ttsRef = useRef(null);
-  const bottomRef = useRef(null);
+  const questionRef = useRef(null);
   const inactivityTimerRef = useRef(null);
   const warningShownRef = useRef(false);
   const sessionIdRef = useRef(null);
@@ -66,7 +76,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
           const initialMessages = [];
 
           // Get AI response for the first question
-          const response = await getAIResponse(initialMessages, userName, languageCode);
+          const response = await getAIResponse(
+            initialMessages,
+            userName,
+            languageCode,
+          );
           if (response.success) {
             const aiMessage = {
               role: "assistant",
@@ -119,13 +133,13 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
   }, [userName]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    questionRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, currentQuestion]);
 
   // Track user messages to show skip button after 5
   useEffect(() => {
     const userMessageCount = messages.filter(
-      (msg) => msg.role === "user"
+      (msg) => msg.role === "user",
     ).length;
     setShowSkipButton(userMessageCount >= 5);
   }, [messages]);
@@ -167,7 +181,7 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                 resetInactivityTimer();
               },
             },
-          }
+          },
         );
       }
 
@@ -248,7 +262,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       setMessages(updatedMessages);
       setCurrentQuestion(null);
 
-      const response = await getAIResponse(updatedMessages, userName, languageCode);
+      const response = await getAIResponse(
+        updatedMessages,
+        userName,
+        languageCode,
+      );
       if (response.success) {
         const aiMessage = {
           role: "assistant",
@@ -269,10 +287,14 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
           });
         } else {
           // If AI doesn't return products, force it by calling with a direct request
-          const forceProductsResponse = await getAIResponse([
-            ...newMessages,
-            { role: "user", content: "Please show me jewelry products now" },
-          ], userName, languageCode);
+          const forceProductsResponse = await getAIResponse(
+            [
+              ...newMessages,
+              { role: "user", content: "Please show me jewelry products now" },
+            ],
+            userName,
+            languageCode,
+          );
 
           if (
             forceProductsResponse.success &&
@@ -313,7 +335,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       setMessages(updatedMessages);
       setCurrentQuestion(null);
 
-      const response = await getAIResponse(updatedMessages, userName, languageCode);
+      const response = await getAIResponse(
+        updatedMessages,
+        userName,
+        languageCode,
+      );
       if (response.success) {
         const aiMessage = {
           role: "assistant",
@@ -379,9 +405,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       };
 
       mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/webm",
+        });
         await processAudioBlob(audioBlob);
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       };
 
       mediaRecorder.start();
@@ -389,7 +417,9 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       toast.success("Recording started...");
     } catch (error) {
       console.error("Error starting recording:", error);
-      toast.error("Failed to start recording. Please check microphone permissions.");
+      toast.error(
+        "Failed to start recording. Please check microphone permissions.",
+      );
     }
   };
 
@@ -408,10 +438,10 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       const reader = new FileReader();
       reader.onloadend = async () => {
         const base64Audio = reader.result;
-        const base64Url = `data:audio/webm;base64,${base64Audio.split(',')[1]}`;
+        const base64Url = `data:audio/webm;base64,${base64Audio.split(",")[1]}`;
 
         // Send to speech-to-text API
-        const result = await speechToText(base64Url);
+        const result = await speechToText(base64Url, languageCode);
 
         if (result.success && result.text) {
           // Use the transcribed text as user response
@@ -445,7 +475,11 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
       setMessages(updatedMessages);
       setCurrentQuestion(null);
 
-      const response = await getAIResponse(updatedMessages, userName, languageCode);
+      const response = await getAIResponse(
+        updatedMessages,
+        userName,
+        languageCode,
+      );
       if (response.success) {
         const aiMessage = {
           role: "assistant",
@@ -496,7 +530,7 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
   };
 
   return (
-    <div className="min-h-screen hero-gradient px-4 py-8 pb-32">
+    <div className="min-h-screen hero-gradient px-4 py-8 pb-12">
       <div className="max-w-4xl mx-auto">
         {/* Skip to Products Button - Floating */}
         <AnimatePresence>
@@ -506,7 +540,7 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="fixed bottom-24 right-4 z-20"
+              className="fixed bottom-12 right-4 z-20"
             >
               <Button
                 onClick={handleSkipToProducts}
@@ -519,7 +553,6 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
             </motion.div>
           )}
         </AnimatePresence>
-
         {/* Confirmation Dialog */}
         <ConfirmDialog
           isOpen={showRestartDialog}
@@ -528,7 +561,6 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
           title="Are you sure you want to start over?"
           message="Your current conversation will be lost and you'll return to the welcome screen."
         />
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -540,14 +572,23 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
           </h1>
         </motion.div>
 
+        <Button
+          onClick={handleRestart}
+          variant="outline"
+          className="fixed right-10 top-8 gold-gradient text-charcoal border-2 px-10 py-4 hover:shadow-lg transition-all duration-300"
+        >
+          <RotateCcw className="w-5 h-5 mr-2" />
+          Start again!
+        </Button>
+
         {/* Conversation History */}
-        <div className="mb-12 max-w-2xl mx-auto">
+        <div className="my-12 max-w-2xl mx-auto">
           <AnimatePresence>
             {messages
               .filter(
                 (msg) =>
                   msg.role !== "system" &&
-                  msg.content != currentQuestion?.content
+                  msg.content != currentQuestion?.content,
               )
               .map((message, index) => (
                 <motion.div
@@ -559,22 +600,31 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                     }`}
                 >
                   {message.role === "user" ? (
-                    <div className="flex justify-end">
-                      <Badge
-                        variant="secondary"
-                        className="inline-block py-2 px-4 text-base bg-secondary/80"
-                      >
+                    <div className="w-full flex items-end gap-3 justify-end">
+                      <Card className="inline-flex gold-gradient text-charcoal max-w-[50%] p-4 luxury-shadow">
                         {message.content}
-                      </Badge>
+                      </Card>
+                      <Avatar className="w-8 h-8 bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center shadow-md border border-gold/20">
+                        <AvatarFallback>
+                          {userName?.charAt(0) || "U"}
+                        </AvatarFallback>
+                      </Avatar>
                     </div>
                   ) : (
-                    <Card className="inline-block premium-card max-w-[85%] p-4 luxury-shadow">
-                      <p className="text-lg text-charcoal">{message.content}</p>
-                    </Card>
+                    <div className="flex items-end gap-3">
+                      <Avatar className="w-10 h-10 text-black/40 text-xs text-center bg-gold/20 rounded-sm flex justify-center items-center">
+                        Evol-e
+                      </Avatar>
+                      <Card className="inline-block premium-card max-w-[85%] p-4 luxury-shadow">
+                        <p className="text-lg text-charcoal">{message.content}</p>
+                      </Card>
+                    </div>
                   )}
                 </motion.div>
               ))}
           </AnimatePresence>
+
+          <div ref={questionRef} />
 
           {/* Current Question Options */}
           {currentQuestion && (
@@ -582,7 +632,7 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
               key="current-question"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-12 flex flex-col items-center"
+              className="my-12 flex flex-col items-center"
             >
               <Card className="premium-card luxury-shadow mb-6 max-w-2xl w-full text-center">
                 <p className="text-2xl font-medium text-charcoal leading-relaxed">
@@ -590,11 +640,15 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                 </p>
                 {/* Auto-play TTS for the current AI question text */}
                 <div className="sr-only" aria-hidden>
-                  <TextToSpeechPlayer ref={ttsRef} text={currentQuestion.content} languageCode={languageCode} />
+                  <TextToSpeechPlayer
+                    ref={ttsRef}
+                    text={currentQuestion.content}
+                    languageCode={languageCode}
+                  />
                 </div>
               </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-[90%] grid grid-cols-1 md:grid-cols-2 gap-4">
                 <AnimatePresence>
                   {currentQuestion.options &&
                     currentQuestion.options.map((option, index) => (
@@ -608,7 +662,9 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                         transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
                       >
                         <Card
-                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${isLoading || isRecording || isTranscribing ? "opacity-50 pointer-events-none" : ""
+                          className={`premium-card cursor-pointer transition-all duration-300 hover:scale-105 hover:luxury-shadow ${isLoading || isRecording || isTranscribing
+                            ? "opacity-50 pointer-events-none"
+                            : ""
                             }`}
                           onClick={() => handleOptionSelect(option)}
                         >
@@ -622,90 +678,61 @@ const ConversationalWizard = ({ userName, languageCode = "en", onComplete, onTim
                         </Card>
                       </motion.div>
                     ))}
+
+                  {/* Voice Recording Button */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
+                  >
+                    <Card className="premium-card luxury-shadow">
+                      <div className="p-4 text-center">
+                        <p className="text-sm text-charcoal/70 mb-3">
+                          Or speak your answer:
+                        </p>
+                        {!isRecording ? (
+                          <Button
+                            onClick={startRecording}
+                            disabled={isLoading || isTranscribing}
+                            className="gold-gradient text-charcoal border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                          >
+                            <Mic className="w-5 h-5 mr-2" />
+                            {isTranscribing
+                              ? "Processing..."
+                              : "Start Recording"}
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={stopRecording}
+                            className="bg-red-500 hover:bg-red-600 text-white border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                          >
+                            <Square className="w-5 h-5 mr-2" />
+                            Stop Recording
+                          </Button>
+                        )}
+                        {isRecording && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="mt-3 flex items-center justify-center"
+                          >
+                            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2"></div>
+                            <span className="text-sm text-red-600 font-medium">
+                              Recording...
+                            </span>
+                          </motion.div>
+                        )}
+                      </div>
+                    </Card>
+                  </motion.div>
                 </AnimatePresence>
               </div>
-
-              {/* Voice Recording Button */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="mt-2 mb-6 flex justify-center"
-              >
-                <Card className="premium-card luxury-shadow">
-                  <div className="p-4 text-center">
-                    <p className="text-sm text-charcoal/70 mb-3">Or speak your answer:</p>
-                    {!isRecording ? (
-                      <Button
-                        onClick={startRecording}
-                        disabled={isLoading || isTranscribing}
-                        className="gold-gradient text-charcoal border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
-                        <Mic className="w-5 h-5 mr-2" />
-                        {isTranscribing ? "Processing..." : "Start Recording"}
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={stopRecording}
-                        className="bg-red-500 hover:bg-red-600 text-white border-0 px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
-                        <Square className="w-5 h-5 mr-2" />
-                        Stop Recording
-                      </Button>
-                    )}
-                    {isRecording && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="mt-3 flex items-center justify-center"
-                      >
-                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2"></div>
-                        <span className="text-sm text-red-600 font-medium">Recording...</span>
-                      </motion.div>
-                    )}
-                  </div>
-                </Card>
-              </motion.div>
             </motion.div>
           )}
 
           {/* Loading State */}
           {isLoading && <Loader position="bottom" />}
-
-          <div ref={bottomRef} />
         </div>
-
-        {/* Fixed Bottom Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          className="fixed bottom-0 left-0 right-0 z-30"
-        >
-          <Card className="premium-card luxury-shadow mx-4 mb-2 border-2 border-gold/20">
-            <div className="flex justify-center gap-4 p-3">
-              {onBack && (
-                <Button
-                  onClick={onBack}
-                  variant="outline"
-                  className="h-12 px-4 text-sm font-medium border-2 border-gold/30 bg-white text-charcoal hover:bg-gold/10 hover:border-gold/50 transition-all duration-300 flex-shrink-0"
-                  style={{ minWidth: "80px", maxWidth: "120px" }}
-                >
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Back
-                </Button>
-              )}
-              <Button
-                onClick={handleRestart}
-                className="h-12 px-6 text-sm font-medium gold-gradient text-charcoal border-0 hover:shadow-[var(--shadow-glow)] transition-all duration-300 flex-shrink-0"
-                style={{ minWidth: "120px", maxWidth: "180px" }}
-              >
-                <RotateCcw className="w-4 h-4 mr-1" />
-                Start Over
-              </Button>
-            </div>
-          </Card>
-        </motion.div>
       </div>
     </div>
   );
@@ -715,7 +742,6 @@ ConversationalWizard.propTypes = {
   userName: PropTypes.string,
   onComplete: PropTypes.func.isRequired,
   onTimeout: PropTypes.func,
-  onBack: PropTypes.func,
 };
 
 export { ConversationalWizard };
