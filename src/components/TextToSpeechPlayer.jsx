@@ -17,13 +17,14 @@ import { getSpeechForText } from "@/app/actions/textToSpeech";
  */
 const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer(
   { text, languageCode = "en", disabled },
-  ref,
+  ref
 ) {
   const audioRef = useRef(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const cacheRef = useRef(new Map()); // text -> objectURL
   const lastRequestIdRef = useRef(0);
+  const isImperativeCallRef = useRef(false);
 
   // Cleanup old object URLs when component unmounts or audioUrl changes
   useEffect(() => {
@@ -35,6 +36,7 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer(
   const generateAndPlayInternal = async (inputText, langCode) => {
     if (!inputText || disabled) return;
     const requestId = ++lastRequestIdRef.current;
+    isImperativeCallRef.current = true;
 
     // Serve from cache if available to reduce latency
     const cachedUrl = cacheRef.current.get(inputText);
@@ -66,7 +68,7 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer(
     try {
       const result = await getSpeechForText(
         inputText,
-        langCode || languageCode,
+        langCode || languageCode
       );
       if (requestId !== lastRequestIdRef.current) return; // stale
       if (!result?.success || !result.audio_data) return;
@@ -124,7 +126,7 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer(
 
   // Still respond to prop changes as a fallback
   useEffect(() => {
-    if (!text || disabled) return;
+    if (!text || disabled || isImperativeCallRef.current) return;
     generateAndPlayInternal(text, languageCode);
   }, [text, disabled, languageCode]);
 

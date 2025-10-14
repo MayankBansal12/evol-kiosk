@@ -43,9 +43,14 @@ const ConversationalWizard = ({
   const sessionIdRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const initializationRef = useRef(false);
 
   useEffect(() => {
     const initializeConversation = async () => {
+      // Prevent duplicate initialization
+      if (initializationRef.current) return;
+      initializationRef.current = true;
+
       setIsLoading(true);
       try {
         // Get or create session
@@ -74,7 +79,7 @@ const ConversationalWizard = ({
           const response = await getAIResponse(
             initialMessages,
             userName,
-            languageCode,
+            languageCode
           );
           if (response.success) {
             const aiMessage = {
@@ -125,7 +130,7 @@ const ConversationalWizard = ({
         mediaRecorderRef.current.stop();
       }
     };
-  }, [userName]);
+  }, [userName, languageCode]);
 
   useEffect(() => {
     questionRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -134,7 +139,7 @@ const ConversationalWizard = ({
   // Track user messages to show skip button after 5
   useEffect(() => {
     const userMessageCount = messages.filter(
-      (msg) => msg.role === "user",
+      (msg) => msg.role === "user"
     ).length;
     setShowSkipButton(userMessageCount >= 5);
   }, [messages]);
@@ -176,7 +181,7 @@ const ConversationalWizard = ({
                 resetInactivityTimer();
               },
             },
-          },
+          }
         );
       }
 
@@ -260,7 +265,7 @@ const ConversationalWizard = ({
       const response = await getAIResponse(
         updatedMessages,
         userName,
-        languageCode,
+        languageCode
       );
       if (response.success) {
         const aiMessage = {
@@ -288,7 +293,7 @@ const ConversationalWizard = ({
               { role: "user", content: "Please show me jewelry products now" },
             ],
             userName,
-            languageCode,
+            languageCode
           );
 
           if (
@@ -333,7 +338,7 @@ const ConversationalWizard = ({
       const response = await getAIResponse(
         updatedMessages,
         userName,
-        languageCode,
+        languageCode
       );
       if (response.success) {
         const aiMessage = {
@@ -413,7 +418,7 @@ const ConversationalWizard = ({
     } catch (error) {
       console.error("Error starting recording:", error);
       toast.error(
-        "Failed to start recording. Please check microphone permissions.",
+        "Failed to start recording. Please check microphone permissions."
       );
     }
   };
@@ -473,7 +478,7 @@ const ConversationalWizard = ({
       const response = await getAIResponse(
         updatedMessages,
         userName,
-        languageCode,
+        languageCode
       );
       if (response.success) {
         const aiMessage = {
@@ -583,7 +588,7 @@ const ConversationalWizard = ({
               .filter(
                 (msg) =>
                   msg.role !== "system" &&
-                  msg.content != currentQuestion?.content,
+                  msg.content != currentQuestion?.content
               )
               .map((message, index) => (
                 <motion.div

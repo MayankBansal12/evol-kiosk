@@ -22,13 +22,6 @@ export async function getSpeechForText(inputText, languageCode = "en") {
       return { success: false, reason: "TTS is not enabled" };
     }
 
-    console.log(
-      " current lan voiee id: ",
-      currentLan,
-      " languageCode: ",
-      languageCode,
-    );
-
     const response = await fetch(SPEECHIFY_API_ENDPOINT, {
       method: "POST",
       headers: {
@@ -51,7 +44,6 @@ export async function getSpeechForText(inputText, languageCode = "en") {
     }
 
     const result = await response.json();
-    console.log("result : ", result);
 
     if (!result.audio_data) {
       console.error("No audio data returned from API");

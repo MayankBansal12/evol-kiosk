@@ -94,15 +94,24 @@ const ProductDetailsPage = ({ product }) => {
                     src={product.image_url}
                     alt={product.product_name}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
+                    }}
                   />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-muted rounded-full mx-auto mb-4"></div>
-                      <p>Image coming soon</p>
+                ) : null}
+                <div
+                  className="w-full h-full flex items-center justify-center text-muted-foreground"
+                  style={{ display: product.image_url ? "none" : "flex" }}
+                >
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <span className="text-3xl">💎</span>
                     </div>
+                    <p className="text-sm font-medium">Jewelry Image</p>
+                    <p className="text-xs text-muted-foreground">Coming Soon</p>
                   </div>
-                )}
+                </div>
               </div>
             </Card>
           </motion.div>
@@ -145,30 +154,6 @@ const ProductDetailsPage = ({ product }) => {
               </div>
             </div>
 
-            {/* Key Features - Style & Features tags */}
-            {product.tags && product.tags.length > 0 && (
-              <Card className="p-6 border-2 border-gold/20 bg-gradient-to-br from-gold/5 to-white shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-6 h-6 bg-gold/20 rounded-full flex items-center justify-center">
-                    <Star className="w-3 h-3 text-gold fill-gold" />
-                  </div>
-                  <h4 className="text-sm font-semibold text-charcoal">
-                    Key Features
-                  </h4>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {product.tags.slice(0, 8).map((tag, index) => (
-                    <Badge
-                      key={index * 2}
-                      className="text-xs px-3 py-1.5 gold-gradient text-charcoal border-0 font-medium"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </Card>
-            )}
-
             {/* ACTION BUTTONS - MOVED TO TOP */}
             <div className="flex gap-4">
               <Button
@@ -180,33 +165,39 @@ const ProductDetailsPage = ({ product }) => {
               </Button>
 
               <ConsultationChat product={product}>
-                <Button
-                  variant="outline"
-                  className="flex-1 h-14 border-2 border-gold/30 bg-white text-base font-medium"
-                >
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Consult
-                </Button>
+                <button className="relative inline-flex h-[56px] overflow-hidden rounded-md p-[1px] focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 focus:ring-offset-slate-50">
+                  <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FFD700_0%,#B8860B_50%,#FFD700_100%)]" />
+                  <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-white px-3 py-1 text-sm font-medium text-charcoal backdrop-blur-3xl">
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    Speak to Evol-e
+                  </span>
+                </button>
               </ConsultationChat>
             </div>
 
-            {/* Save/Share Actions - MOVED FROM LEFT SECTION */}
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                className="flex-1 h-12 border-2 border-gold/30 bg-white text-sm font-medium"
-              >
-                <Heart className="w-4 h-4 mr-2" />
-                Save
-              </Button>
-              <Button
-                variant="outline"
-                className="flex-1 h-12 border-2 border-gold/30 bg-white text-sm font-medium"
-              >
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
-            </div>
+            {/* Key Features - Moved after action buttons */}
+            {product.tags && product.tags.length > 0 && (
+              <Card className="p-6 border border-gold/20 bg-white/50 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-6 h-6 bg-gold/20 rounded-full flex items-center justify-center">
+                    <Star className="w-3 h-3 text-gold fill-gold" />
+                  </div>
+                  <h4 className="text-sm font-semibold text-charcoal">
+                    Key Features
+                  </h4>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {product.tags.slice(0, 8).map((tag, index) => (
+                    <Badge
+                      key={index}
+                      className="text-xs px-3 py-1.5 gold-gradient text-charcoal border-0 font-medium"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </Card>
+            )}
           </motion.div>
         </div>
 
@@ -251,277 +242,6 @@ const ProductDetailsPage = ({ product }) => {
                     ))}
                 </div>
               </Card>
-            </div>
-          )}
-
-          {/* Match Analysis */}
-          {userRequirements.allTags && userRequirements.allTags.length > 0 && (
-            <Card className="p-6 border-2 border-gold/30 bg-gradient-to-br from-gold/5 to-white shadow-sm">
-              <h4 className="text-base font-semibold text-charcoal mb-4 flex items-center gap-2">
-                <span className="text-2xl">🎯</span> Perfect Match Analysis
-              </h4>
-
-              {/* Match Scores Grid - Improved Design */}
-              <div className="grid grid-cols-3 gap-6 mb-8">
-                {/* Overall Match */}
-                <div className="text-center">
-                  <div className="relative w-20 h-20 mx-auto mb-3">
-                    <div className="w-20 h-20 rounded-full border-4 border-gray-200 flex items-center justify-center bg-gradient-to-br from-gold/10 to-gold/5">
-                      <div className="w-16 h-16 rounded-full border-4 border-gold flex items-center justify-center bg-white shadow-sm">
-                        <span className="text-lg font-bold text-charcoal">
-                          {product.matchPercentage || 0}%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-sm font-semibold text-charcoal">
-                    Overall Match
-                  </p>
-                </div>
-
-                {/* Tags Match */}
-                <div className="text-center">
-                  <div className="relative w-20 h-20 mx-auto mb-3">
-                    <div className="w-20 h-20 rounded-full border-4 border-gray-200 flex items-center justify-center bg-gradient-to-br from-green-100 to-green-50">
-                      <div className="w-16 h-16 rounded-full border-4 border-green-500 flex items-center justify-center bg-white shadow-sm">
-                        <span className="text-lg font-bold text-charcoal">
-                          75%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-sm font-semibold text-charcoal">
-                    Tags Match
-                  </p>
-                </div>
-
-                {/* Metadata Match */}
-                <div className="text-center">
-                  <div className="relative w-20 h-20 mx-auto mb-3">
-                    <div className="w-20 h-20 rounded-full border-4 border-gray-200 flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-50">
-                      <div className="w-16 h-16 rounded-full border-4 border-blue-500 flex items-center justify-center bg-white shadow-sm">
-                        <span className="text-lg font-bold text-charcoal">
-                          85%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-sm font-semibold text-charcoal">
-                    Metadata Match
-                  </p>
-                </div>
-              </div>
-
-              {/* Matched Features */}
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm font-semibold text-charcoal/80 mb-3">
-                    What Matches:
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {product.matchedTags &&
-                      product.matchedTags.slice(0, 6).map((tag, index) => (
-                        <Badge
-                          key={index}
-                          className="text-xs px-3 py-1.5 bg-green-100 text-green-800 border-green-300 font-medium"
-                        >
-                          ✓ {tag}
-                        </Badge>
-                      ))}
-                  </div>
-                </div>
-
-                {product.additionalFeatures &&
-                  product.additionalFeatures.length > 0 && (
-                    <div>
-                      <p className="text-sm font-semibold text-charcoal/80 mb-3">
-                        Bonus Features:
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {product.additionalFeatures
-                          .slice(0, 4)
-                          .map((feature, index) => (
-                            <Badge
-                              key={index}
-                              className="text-xs px-3 py-1.5 bg-gold/10 text-gold border border-gold/30 font-medium"
-                            >
-                              + {feature}
-                            </Badge>
-                          ))}
-                      </div>
-                    </div>
-                  )}
-              </div>
-            </Card>
-          )}
-
-          {/* Product Details */}
-          {product.metadata && (
-            <div className="space-y-5">
-              <h3 className="text-lg font-semibold text-charcoal flex items-center gap-2">
-                <div className="w-2 h-2 bg-gold rounded-full"></div>
-                Product Details
-              </h3>
-
-              {/* Main Metrics Row */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* Style Intensity */}
-                {product.metadata.style_intensity && (
-                  <Card className="p-5 border-2 border-gold/30 bg-gradient-to-br from-gold/5 to-gold/10">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gold/20 rounded-full flex items-center justify-center">
-                          <TrendingUp className="w-4 h-4 text-gold" />
-                        </div>
-                        <span className="text-sm font-semibold text-charcoal">
-                          Style Intensity
-                        </span>
-                      </div>
-                      <div className="text-2xl font-bold text-charcoal">
-                        {product.metadata.style_intensity}/10
-                      </div>
-                    </div>
-                    <div className="w-full bg-white/60 rounded-full h-2 mb-2">
-                      <div
-                        className="bg-gradient-to-r from-gold to-gold/80 h-2 rounded-full transition-all duration-500"
-                        style={{
-                          width: `${product.metadata.style_intensity * 10}%`,
-                        }}
-                      ></div>
-                    </div>
-                    <p className="text-xs text-charcoal/70 font-medium">
-                      {product.metadata.style_intensity >= 8
-                        ? "Dramatic & Eye-catching"
-                        : product.metadata.style_intensity >= 6
-                        ? "Bold & Confident"
-                        : product.metadata.style_intensity >= 4
-                        ? "Moderate & Balanced"
-                        : "Subtle & Refined"}
-                    </p>
-                  </Card>
-                )}
-
-                {/* Formality Level */}
-                {product.metadata.formality_level && (
-                  <Card className="p-5 border-2 border-gold/30 bg-gradient-to-br from-gold/5 to-gold/10">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gold/20 rounded-full flex items-center justify-center">
-                          <Award className="w-4 h-4 text-gold" />
-                        </div>
-                        <span className="text-sm font-semibold text-charcoal">
-                          Formality Level
-                        </span>
-                      </div>
-                      <div className="text-2xl font-bold text-charcoal">
-                        {product.metadata.formality_level}/10
-                      </div>
-                    </div>
-                    <div className="w-full bg-white/60 rounded-full h-2 mb-2">
-                      <div
-                        className="bg-gradient-to-r from-gold to-gold/80 h-2 rounded-full transition-all duration-500"
-                        style={{
-                          width: `${
-                            (product.metadata.formality_level / 9) * 100
-                          }%`,
-                        }}
-                      ></div>
-                    </div>
-                    <p className="text-xs text-charcoal/70 font-medium">
-                      {product.metadata.formality_level >= 8
-                        ? "Formal & Elegant"
-                        : product.metadata.formality_level >= 6
-                        ? "Smart Casual"
-                        : product.metadata.formality_level >= 4
-                        ? "Casual & Comfortable"
-                        : "Relaxed & Everyday"}
-                    </p>
-                  </Card>
-                )}
-              </div>
-
-              {/* Secondary Details Row */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* Materials */}
-                {product.metadata.materials && (
-                  <Card className="p-5 border-2 border-gold/20 bg-white/50">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-6 h-6 bg-gold/20 rounded-full flex items-center justify-center">
-                        <div className="w-2 h-2 bg-gold rounded-full"></div>
-                      </div>
-                      <span className="text-sm font-semibold text-charcoal">
-                        Materials
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {product.metadata.materials.map((material, index) => (
-                        <Badge
-                          key={index}
-                          className="text-xs px-3 py-1.5 gold-gradient text-charcoal border-0 capitalize font-medium"
-                        >
-                          {material}
-                        </Badge>
-                      ))}
-                    </div>
-                  </Card>
-                )}
-
-                {/* Investment Value */}
-                {product.metadata.investment_value && (
-                  <Card className="p-5 border-2 border-gold/20 bg-white/50">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-6 h-6 bg-gold/20 rounded-full flex items-center justify-center">
-                        <TrendingUp className="w-3 h-3 text-gold" />
-                      </div>
-                      <span className="text-sm font-semibold text-charcoal">
-                        Investment Value
-                      </span>
-                    </div>
-                    <Badge className="text-sm px-4 py-2 gold-gradient text-charcoal border-0 uppercase font-bold">
-                      {product.metadata.investment_value}
-                    </Badge>
-                  </Card>
-                )}
-              </div>
-
-              {/* Additional Metadata Row */}
-              <div className="grid grid-cols-3 gap-3">
-                {/* Size Category */}
-                {product.metadata.size_category && (
-                  <Card className="p-3 border border-gold/20 bg-white/30">
-                    <div className="text-xs font-medium text-muted-foreground mb-1">
-                      Size
-                    </div>
-                    <div className="text-sm font-semibold text-charcoal capitalize">
-                      {product.metadata.size_category}
-                    </div>
-                  </Card>
-                )}
-
-                {/* Weight Range */}
-                {product.metadata.weight_range && (
-                  <Card className="p-3 border border-gold/20 bg-white/30">
-                    <div className="text-xs font-medium text-muted-foreground mb-1">
-                      Weight
-                    </div>
-                    <div className="text-sm font-semibold text-charcoal capitalize">
-                      {product.metadata.weight_range}
-                    </div>
-                  </Card>
-                )}
-
-                {/* Maintenance Level */}
-                {product.metadata.maintenance_level && (
-                  <Card className="p-3 border border-gold/20 bg-white/30">
-                    <div className="text-xs font-medium text-muted-foreground mb-1">
-                      Care
-                    </div>
-                    <div className="text-sm font-semibold text-charcoal capitalize">
-                      {product.metadata.maintenance_level}
-                    </div>
-                  </Card>
-                )}
-              </div>
             </div>
           )}
         </div>

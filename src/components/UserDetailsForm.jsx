@@ -36,18 +36,19 @@ const UserDetailsForm = ({ onNext, onBack }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (name.trim()) {
-      // Save to session
-      const sessionId = getCurrentSessionId();
-      if (sessionId) {
-        saveSessionData(sessionId, {
-          userName: name.trim(),
-          language: language,
-          state: "userDetails",
-        });
-      }
-      onNext(name.trim(), language);
+    // Use name if provided, otherwise default to "Guest"
+    const userName = name.trim() || "Guest";
+
+    // Save to session
+    const sessionId = getCurrentSessionId();
+    if (sessionId) {
+      saveSessionData(sessionId, {
+        userName: userName,
+        language: language,
+        state: "userDetails",
+      });
     }
+    onNext(userName, language);
   };
 
   return (
@@ -94,9 +95,8 @@ const UserDetailsForm = ({ onNext, onBack }) => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name..."
+                placeholder="Enter your name (optional)..."
                 className="h-14 text-lg border-2 border-border/50 focus:border-gold transition-all duration-200"
-                required
               />
             </div>
 
@@ -126,8 +126,7 @@ const UserDetailsForm = ({ onNext, onBack }) => {
             <div className="flex gap-4 pt-8">
               <Button
                 type="submit"
-                className="flex-1 kiosk-button gold-gradient text-charcoal border-0 h-14 text-lg font-medium transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                disabled={!name.trim()}
+                className="flex-1 kiosk-button gold-gradient text-charcoal border-0 h-14 text-lg font-medium transition-all duration-200 hover:scale-[1.02]"
               >
                 Continue
               </Button>
