@@ -19,7 +19,10 @@ export default function Home() {
     if (session.isRestored && session.data) {
       // Restore state from session
       if (session.data.userName) {
-        setSurveyData({ name: session.data.userName, language: session.data.language || "en" });
+        setSurveyData({
+          name: session.data.userName,
+          language: session.data.language || "en",
+        });
       }
 
       if (session.data.state === "survey" && session.data.userName) {
