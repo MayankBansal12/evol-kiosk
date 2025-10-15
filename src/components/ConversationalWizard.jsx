@@ -577,8 +577,8 @@ const ConversationalWizard = ({
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <h1 className="text-3xl font-light text-charcoal mb-4">
-            <span className="font-medium">Evol-</span> e
+          <h1 className="text-3xl font-medium text-charcoal mb-4">
+            Evol-e
           </h1>
         </motion.div>
 

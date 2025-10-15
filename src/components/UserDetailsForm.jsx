@@ -102,7 +102,7 @@ const UserDetailsForm = ({ onNext }) => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name (optional) or leave blank for generic greetings..."
+                placeholder="Enter your name (optional)"
                 className="h-14 text-lg bg-white border-2 border-border/50 focus:border-gold transition-all duration-200"
               />
             </div>

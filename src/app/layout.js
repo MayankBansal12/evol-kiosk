@@ -1,29 +1,43 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Open_Sans, Montserrat } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata = {
   title: "Conversational Kiosk for jewellery shopping",
   description:
     "Buy jewellery from Evol jewels using the conversational kiosk powered by AI.",
+  icons: {
+    icon: "/evol.jpg",
+  },
 };
 
 // eslint-disable-next-line react/prop-types
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/evol.jpg" />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${playfair.variable} ${openSans.variable} ${montserrat.variable} antialiased`}
       >
         {children}
         <Toaster
