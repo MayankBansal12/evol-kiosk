@@ -21,7 +21,7 @@ export default function Home() {
       if (session.data.userName) {
         setSurveyData({
           name: session.data.userName,
-          language: session.data.language || "en",
+          language: session.data.language || "English",
         });
       }
 

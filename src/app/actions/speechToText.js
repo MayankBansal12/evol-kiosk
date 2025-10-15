@@ -1,9 +1,13 @@
 "use server";
 
+import languageData from "@/data/languages.json";
+
 const API_ENDPOINT_FOR_TRANSCRIPTION =
   "https://api.groq.com/openai/v1/audio/transcriptions";
 
-export async function speechToText(audioBase64Url, languageCode) {
+export async function speechToText(audioBase64Url, language) {
+  const currentLan = languageData.find((lan) => lan.value === language);
+
   try {
     if (!audioBase64Url) {
       return { success: false };
@@ -12,7 +16,7 @@ export async function speechToText(audioBase64Url, languageCode) {
     const formData = new FormData();
     formData.append("url", audioBase64Url);
     formData.append("model", "whisper-large-v3");
-    formData.append("language", languageCode ?? "en");
+    formData.append("language", currentLan.code ?? "en");
 
     const apiResponse = await fetch(API_ENDPOINT_FOR_TRANSCRIPTION, {
       method: "POST",

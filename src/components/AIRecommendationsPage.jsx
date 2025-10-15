@@ -16,6 +16,7 @@ import {
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import { formatPrice } from "@/lib/productHelpers";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 const AIRecommendationsPage = ({ surveyData, onRestart }) => {
   const [products, setProducts] = useState([]);
@@ -192,26 +193,12 @@ const AIRecommendationsPage = ({ surveyData, onRestart }) => {
                 onClick={() => handleProductClick(product)}
               >
                 <div className="aspect-square overflow-hidden bg-pearl relative flex-shrink-0">
-                  <img
+                  <ImageWithFallback
                     src={product.image_url || product.image}
                     alt={product.product_name || product.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                      e.target.nextSibling.style.display = "flex";
-                    }}
+                    wrapperClassName="w-full h-full"
                   />
-                  <div
-                    className="w-full h-full flex items-center justify-center text-muted-foreground absolute inset-0"
-                    style={{ display: "none" }}
-                  >
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-3 flex items-center justify-center">
-                        <span className="text-2xl">💎</span>
-                      </div>
-                      <p className="text-xs font-medium">Jewelry Image</p>
-                    </div>
-                  </div>
                   {/* Match Score Badge */}
                   {product.matchPercentage && (
                     <div className="absolute top-2 right-2">

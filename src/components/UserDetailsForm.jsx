@@ -2,6 +2,13 @@
 
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
@@ -14,9 +21,9 @@ import {
 } from "@/lib/sessionManager";
 import languages from "@/data/languages.json";
 
-const UserDetailsForm = ({ onNext, onBack }) => {
+const UserDetailsForm = ({ onNext }) => {
   const [name, setName] = useState("");
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("English");
 
   // Restore data from session if available
   useEffect(() => {
@@ -95,7 +102,7 @@ const UserDetailsForm = ({ onNext, onBack }) => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name (optional) or leave blank for generic greetings..."
+                placeholder="Enter your name (optional)"
                 className="h-14 text-lg bg-white border-2 border-border/50 focus:border-gold transition-all duration-200"
               />
             </div>
@@ -107,26 +114,27 @@ const UserDetailsForm = ({ onNext, onBack }) => {
               >
                 Preferred Language
               </Label>
-              <select
-                id="language"
+              <Select
                 value={language}
-                onChange={(e) => {
-                  setLanguage(e.target.value);
-                }}
-                className="h-14 text-lg border-2 border-border/50 focus:border-gold rounded-md px-3 w-full bg-white transition-all duration-200"
+                onValueChange={(val) => setLanguage(val)}
               >
-                {languages.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.value}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="h-14 text-lg border-2 border-border/50 focus:border-gold rounded-md px-3 w-full bg-white transition-all duration-200">
+                  <SelectValue placeholder="Select language" />
+                </SelectTrigger>
+                <SelectContent>
+                  {languages.map((lang) => (
+                    <SelectItem key={lang.code} value={lang.value}>
+                      {lang.value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex gap-4 pt-8">
               <Button
                 type="submit"
-                className="flex-1 kiosk-button gold-gradient text-charcoal border-0 h-14 text-lg font-medium transition-all duration-200 hover:scale-[1.02]"
+                className="flex-1 kiosk-button gold-gradient text-charcoal border-0 h-10 font-medium transition-all duration-200 hover:scale-[1.02]"
               >
                 Continue
               </Button>

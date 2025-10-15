@@ -27,6 +27,7 @@ import {
 } from "@/lib/productHelpers";
 import { useRouter, useSearchParams } from "next/navigation";
 import PropTypes from "prop-types";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 const ProductDetailsPage = ({ product }) => {
   const router = useRouter();
@@ -127,29 +128,23 @@ const ProductDetailsPage = ({ product }) => {
             {/* Product Image */}
             <div className="relative">
               <div className="aspect-square bg-pearl">
-                {product.image_url ? (
-                  <img
-                    src={product.image_url}
-                    alt={product.product_name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                      e.target.nextSibling.style.display = "flex";
-                    }}
-                  />
-                ) : null}
-                <div
-                  className="w-full h-full flex items-center justify-center text-muted-foreground"
-                  style={{ display: product.image_url ? "none" : "flex" }}
-                >
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                      <span className="text-3xl">💎</span>
+                <ImageWithFallback
+                  src={product.image_url}
+                  alt={product.product_name}
+                  className="w-full h-full object-cover"
+                  wrapperClassName="w-full h-full"
+                  fallbackContent={(
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                      <div className="text-center">
+                        <div className="w-20 h-20 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                          <span className="text-3xl">💎</span>
+                        </div>
+                        <p className="text-sm font-medium">Jewelry Image</p>
+                        <p className="text-xs text-muted-foreground">Coming Soon</p>
+                      </div>
                     </div>
-                    <p className="text-sm font-medium">Jewelry Image</p>
-                    <p className="text-xs text-muted-foreground">Coming Soon</p>
-                  </div>
-                </div>
+                  )}
+                />
               </div>
             </div>
 

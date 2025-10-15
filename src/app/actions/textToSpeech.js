@@ -1,13 +1,11 @@
 "use server";
 
-import languageData from "@/data/languages.json";
-
 /**
  * Generates speech audio data from text using the ElevenLabs API
  * This is a server-side only function
  */
-export async function getSpeechForText(inputText, languageCode = "en") {
-  const currentLan = languageData.find((lan) => lan.code === languageCode);
+export async function getSpeechForText(inputText, languageCode) {
+  // const currentLan = languageData.find((lan) => lan.value === languageCode);
   try {
     if (!inputText || !inputText.trim() || typeof inputText !== "string") {
       console.error("Invalid text input for speech generation");
@@ -21,14 +19,7 @@ export async function getSpeechForText(inputText, languageCode = "en") {
       return { success: false, reason: "TTS is not enabled" };
     }
 
-    console.log(
-      "Generating speech for language:",
-      languageCode,
-      "using voice_id:",
-      currentLan.voice_id
-    );
-
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/2zRM7PkgwBPiau2jvVXc`, {
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/1qEiC6qsybMkmnNdVMbK`, {
       method: "POST",
       headers: {
         "Accept": "audio/mpeg",
@@ -38,10 +29,6 @@ export async function getSpeechForText(inputText, languageCode = "en") {
       body: JSON.stringify({
         text: inputText,
         model_id: "eleven_multilingual_v2",
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.5
-        }
       }),
     });
 

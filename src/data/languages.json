@@ -15,13 +15,8 @@
     "voice_id": "3Th96YoTP1kEKxJroYo1"
   },
   {
-    "value": "Chinese (Simplified)",
-    "code": "zh-CN",
-    "voice_id": "4VZIsMPtgggwNg7OXbPY"
-  },
-  {
-    "value": "Chinese (Traditional)",
-    "code": "zh-TW",
+    "value": "Chinese",
+    "code": "zh",
     "voice_id": "4VZIsMPtgggwNg7OXbPY"
   },
   {

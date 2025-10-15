@@ -10,7 +10,7 @@ import { JEWELLERY_STYLIST_PROMPT } from "./prompts";
 export async function getProductChatResponse(
   messages,
   product,
-  languageCode = "en"
+  languageCode = "English"
 ) {
   try {
     const USE_MOCK_DATA =
@@ -47,7 +47,7 @@ export async function getProductChatResponse(
 /**
  * Server action to interact with survey form
  */
-export async function getAIResponse(messages, userName, languageCode = "en") {
+export async function getAIResponse(messages, userName, languageCode = "English") {
   try {
     const USE_MOCK_DATA =
       process.env.USE_MOCK_DATA === "true" || !process.env.GEMINI_API_KEY;
