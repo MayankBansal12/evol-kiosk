@@ -16,13 +16,12 @@ import { getSpeechForText } from "@/app/actions/textToSpeech";
  * - Converts base64 audio data to Blob URL and handles cleanup
  */
 const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer(
-  { text, languageCode = "en", disabled },
+  { text, languageCode = "English", disabled },
   ref
 ) {
   const audioRef = useRef(null);
   const [audioUrl, setAudioUrl] = useState(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const cacheRef = useRef(new Map()); // text -> objectURL
+  const cacheRef = useRef(new Map());
   const lastRequestIdRef = useRef(0);
   const isImperativeCallRef = useRef(false);
 
@@ -64,7 +63,6 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer(
       return;
     }
 
-    setIsGenerating(true);
     try {
       const result = await getSpeechForText(
         inputText,
@@ -114,8 +112,6 @@ const TextToSpeechPlayer = forwardRef(function TextToSpeechPlayer(
       }
     } catch (err) {
       console.error("Failed to generate or play TTS:", err);
-    } finally {
-      setIsGenerating(false);
     }
   };
 

@@ -26,7 +26,7 @@ import { toast } from "sonner";
 
 const ConversationalWizard = ({
   userName,
-  languageCode = "en",
+  languageCode = "English",
   onComplete,
   onTimeout,
 }) => {

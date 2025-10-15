@@ -12,7 +12,7 @@ export async function speechToText(audioBase64Url, languageCode) {
     const formData = new FormData();
     formData.append("url", audioBase64Url);
     formData.append("model", "whisper-large-v3");
-    formData.append("language", languageCode ?? "en");
+    formData.append("language", languageCode ?? "English");
 
     const apiResponse = await fetch(API_ENDPOINT_FOR_TRANSCRIPTION, {
       method: "POST",
