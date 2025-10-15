@@ -1,7 +1,5 @@
 "use server";
 
-import languageData from "@/data/languages.json";
-
 /**
  * Generates speech audio data from text using the ElevenLabs API
  * This is a server-side only function
