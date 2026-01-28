@@ -12,14 +12,13 @@ export async function getSpeechForText(inputText, languageCode) {
       return { success: false };
     }
 
-    if (
-      process.env.USE_MOCK_DATA === "true" ||
-      !process.env.ELEVEN_LABS_API_KEY
-    ) {
+    if (!process.env.ELEVEN_LABS_API_KEY) {
       return { success: false, reason: "TTS is not enabled" };
     }
 
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/1qEiC6qsybMkmnNdVMbK`, {
+    const voiceId= process.env.ELEVEN_LABS_VOICE_ID || "EXAVITQu4vr4xnSDxMaL"
+
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
       method: "POST",
       headers: {
         "Accept": "audio/mpeg",
@@ -48,12 +47,12 @@ export async function getSpeechForText(inputText, languageCode) {
     const uint8Array = new Uint8Array(audioBuffer);
     let binaryString = '';
     const chunkSize = 8192;
-    
+
     for (let i = 0; i < uint8Array.length; i += chunkSize) {
       const chunk = uint8Array.slice(i, i + chunkSize);
       binaryString += String.fromCharCode.apply(null, chunk);
     }
-    
+
     const base64String = btoa(binaryString);
 
     return {
